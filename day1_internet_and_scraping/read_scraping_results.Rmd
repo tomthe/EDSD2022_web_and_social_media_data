@@ -1,0 +1,131 @@
+---
+title: "Read scraping results"
+author: "Tom Theile"
+date: "24 2 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+```
+
+## Exercise: Read all the headline data into one Dataframe
+
+
+```{R}
+
+result_folder <- "D:/dev/r/EDSD22_web_and_social_media_data/day1_internet_and_scraping/data/"
+
+#find all filenames that contain "all_headlines_of_one_scrape":
+#pattern is aregular expression and .* stands for any number of any character
+
+filenames <- list.files(path=result_folder, pattern = ".*all_headlines_of_one_scrape.*", full.names = TRUE)
+
+print(filenames)
+
+```
+
+That looks good! Let's look into a single file and see whether it contains what we want:
+```{R}
+df1 <- readRDS(filenames[1]) # read one of the files
+head(df1)
+
+```
+oh no, I did something wrong when I constructed the file in `scrape_news.R`. But the content is in there somewhere:
+```{R}
+head(df1[[1]])
+
+#knitr::kable(head(df1[[1]]), caption = "Headlines 1", floating.environment="sidewaystable")
+
+```
+yes! That looks like the data we expected.
+
+
+```{R}
+knitr::kable(head(df1[4]), caption = "Headlines 4", floating.environment="sidewaystable")
+
+```
+
+Now we have to read every file and construct one big dataframe  which will make things easier to analyse:
+
+```{R}
+#list_of_df = list()
+df_all_headlines = df1[[1]]
+
+for (fn in filenames) {
+  #for every filename:
+  print(paste0("reading: ",fn))
+  dflist <- readRDS(fn)
+  for(i in 1:4){ #Every file object
+    df_all_headlines <- rbind(df_all_headlines, dflist[[i]])
+  }
+}
+
+print(paste0("number of headlines: ",nrow(df_all_headlines),"; number of columns: ", ncol(df_all_headlines)))
+print(paste0("number of unique timestamps: ", length(unique(df_all_headlines$date))))
+print(paste0("number of unique headlines: ", length(unique(df_all_headlines$headlines))))
+print( length(unique(df_all_headlines$date)))
+#sample_n(df_all_headlines,10)
+knitr::kable(sample_n(df_all_headlines,8), caption = "8 random headlines", floating.environment="sidewaystable")
+```
+That seems good. Let's save everything as a csv-file:
+```{R}
+write.csv(df_all_headlines,paste0(result_folder,"df_all_headlines.csv"))
+
+```
+
+
+
+## Sentiment analysis in R
+
+[Sentiment analysis](https://en.wikipedia.org/wiki/Sentiment_analysis) describes the
+extraction of "sentiment" (affection, subjective feelings) from text data, usually by
+using methods from machine learning.
+
+Sentiment analysis itself is still an area of active research with better models
+beating the state of the art being published regularly. But for our purposes we just
+use an easy to use R-package for sentiment analysis:
+
+
+https://cran.r-project.org/web/packages/syuzhet/vignettes/syuzhet-vignette.html
+
+
+```{R}
+if(!require(syuzhet)){
+    install.packages("syuzhet") 
+    library(syuzhet)
+}
+
+dfsmall <-sample_n(df_all_headlines,8)
+
+sentiments <- get_nrc_sentiment(dfsmall$headlines)
+
+knitr::kable(cbind(dfsmall,sentiments), caption = "8 random headlines", floating.environment="sidewaystable")
+
+#now we compute the nrc_sentiments for all the headlines:
+df_all_headlines_sentiments <- cbind(df_all_headlines,get_nrc_sentiment(df_all_headlines$headlines))
+write.csv(df_all_headlines_sentiments,paste0(result_folder,"df_all_headlines_sentiments.csv"))
+
+```
+
+Now we filter by some criteria:
+
+```{R}
+library(tidyverse)
+df_ukraine <- df_all_headlines_sentiments %>%
+  filter(str_detect(headlines, 'ukraine')) # "ukraine|war" if you want to search for two words
+#head(df_ukraine)
+df_germany <- df_all_headlines_sentiments %>%
+  filter(str_detect(headlines, 'germany'))
+head(df_ukraine)
+
+```
+
+
+
+
+
+
+
+

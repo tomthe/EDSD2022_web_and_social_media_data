@@ -198,25 +198,20 @@ More on that later today.
 
 Application Programming Interfaces (APIs) are interfaces of programs that can be used by other programs to communicate with each other. In the context of the Internet, APIs are "websites for machines". They have a well-defined structure which makes it easy (not always!) to access the data.
 
-We will learn more about APIs on Wednesday and Thursday.
+We will learn more about APIs on Wednesday (Twitter and others) and Thursday (Facebook).
+Question: Has anyone used APIs before? How much do you know about accessing e.g. Facebook audience estimates? How much more do you want to learn?
+
 
 #### Downloading big files
 
 Some institutions provide data in the form of big data files. These files can be downloaded and then processed offline by your computer. The data can be stored in a variety of different formats (comma seperated value-files, Excel-files, XML-files, etc.).
 
-We will work with such data on Thursday.
+We will work with such data on Tuesday.
 
 #### Accessing DBs directly
 
-Sometimes you can gain direct access to certain databases. Then you can connect to the database over a special connection and query the database directly.
+Sometimes you can gain direct access to certain databases. Then you can connect to the database over a special connection and query the database directly, often with the query language SQL.
 This is not very common, but it is possible. We will not cover this in this course.
-
-
-
-
-
-
-
 
 
 
@@ -233,6 +228,7 @@ A webpage in its simplest form is just a file containing HTML code.
 
 Example of a minimal webpage:
 ```
+<!DOCTYPE html>
 <html>
   <head>
     <title>My webpage</title>
@@ -298,8 +294,8 @@ main > h1, .home-header > h1 {
 
 ```
 
-`main > h1` selects all the h1-tags (big headlines) that are children of "main"-tag.
-Then the stuff between the curly braces defines the font, the size and look of the headline.
+`main > h1` selects all the h1-tags (headlines) that are children of the "main"-tag.
+Then the stuff between the curly braces defines the font, size and look of the headline.
 
 
 You don’t need to generate CSS selectors yourself, because in most cases
@@ -363,7 +359,6 @@ page_edsd <- read_html("https://eaps.nl/edsd")
 # use selectorGadget to find the css selector:
 css_selector <-"h1"
 
-
 headlines <- page_edsd %>%
     html_nodes(css_selector) %>%   # This line selects all the html-elements with that css-selector
     html_text()   # This extracts only the Text of the selected html-elements
@@ -389,9 +384,7 @@ print(headlines)
 
 ```
 
-**Exercise 1.3 (hands-on):** Scrape the headlines from a popular news-website of your choosing!
-
-
+**Exercise 1.3 (hands-on):** Scrape the headlines from a popular news-website of your choice!
 
 ```{R, echo=FALSE}
 library(dplyr)
@@ -401,7 +394,7 @@ news_url = "https://www.washingtonpost.com/"
 news_selector = ".left.relative , .left.relative span, .center.relative span, .left.relative span"
 news_name ="washingtonpost"
 
-result_folder <- "D:/dev/r/EDSD_2022_working_with_digital_data/day1-Internet/data/"
+result_folder <- "D:/dev/r/EDSD_2022_working_with_digital_data/day1_internet_and_scraping/data/"
   
 # load the page from the internet:
 news_page <- read_html(news_url)
@@ -424,7 +417,7 @@ links <- news_page %>%
   html_attr('href')
 head(links)
 
-# Create a dataframe from all the data (note that we didn't really need the two blocks before):
+# Create a dataframe from all the data (please note that we didn't really need the two blocks before):
 dflinks <- data.frame(
   headline = news_page %>% html_nodes(news_selector) %>% html_text(),
   links = news_page %>% html_nodes(news_selector) %>% html_node("a") %>% html_attr("href"), #instead of extracting the text, we extract the link-tag <a href="https:\\......">text</a> and extract the href-attribute
@@ -434,14 +427,13 @@ dflinks <- data.frame(
 
 dflinks2 <- dflinks %>% 
   filter(!is.na(links)) %>% #remove rows without links
-  group_by(headline) 
-
-
+  group_by(headline) # remove duplicate headlines
 
 knitr::kable(head(dflinks2), caption = "Headlines 4")
 
 ```
 
+### Question: Do you have ideas for scraping, or problems that could be solved by scraping websites?
 
 ```{R}
 
@@ -457,23 +449,28 @@ I am not a legal expert, but I can share some of the "wisdom" I learned so far:
 
  * For most owners of webpages, it is fine to scrape their site, as long as you "behave"
    * "Behaving" means: 
-     * you don't induce interruptions or costs to their service by scraping too fast or too much (good rule of thumb: only scrape one domain every 2 seconds)
+     * You don't induce interruptions or costs to their service by scraping too fast or too much (good rule of thumb: only scrape one domain every 2 seconds)
      * You don't use the data to the disadvantage of the scraped site. Since content is often copyrighted, you are mostly not allowed to share your scraped data publicly. (Exemption: you alter or aggregate the data enough)
      * You respect their [robots.txt](https://en.wikipedia.org/wiki/Robots_exclusion_standard)
- * For other website owners, it is not okay - but you are probably still allowed to scrape it!
-   * A US court ruled, that LinkedIn has to remove technical measures that prevented a startup from scraping public profile information of LinkedIn users [source](https://www.reuters.com/article/us-microsoft-linkedin-ruling-idUSKCN1AU2BV?il=0)
+ * For other website owners or purposes, it is not okay - but you are probably still allowed to scrape it!
+   * A US court ruled, that LinkedIn had to remove technical measures that prevented a startup from scraping public profile information of LinkedIn users [source](https://www.reuters.com/article/us-microsoft-linkedin-ruling-idUSKCN1AU2BV?il=0)
    * Sometimes you have to have an account and accept terms and contents which may forbid scraping. But the terms may be not applicable in your jurisdiction. You should consult your supervisor to make sure whether you need legal consulting before starting to scrape under these conditions.
-   * If you have an account: it may get blocked or suspended. Don't use accounts that are important to you for web-scraping!
+   * If you have an account: it may get blocked or suspended. Don't use accounts that are important to you personally for web-scraping!
    * Website owners can restrict IP-addresses from making too many requests. But often such an IP-ban will be lifted on the next day.
    
 
-
-## Code-session: Build a news-scraper
+## Code-session: Build a news-scraper and analyse headlines
 
 We will:
 
  * build a news-website-scraper
  * write a script that schedules the scraping 4 times a day
  * read the results into one data.frame
+ * analyse and visualize the results
  * use a sentiment-analysis package to quantify the emotions of headlines
 
+
+
+--> schedule.R
+--> read_scraping_results.Rmd
+--> plot_and_analyze_headlines.Rmd

@@ -1,0 +1,314 @@
+---
+title: "Sentiment and Shap"
+author: "Tom Theile"
+date: "25 2 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{R}
+fn ="./data/df_all_headlines_sentiments.csv"
+df_headlines_sentiments = read.csv(fn)
+df_headlines_sentiments$date = as.Date(df_headlines_sentiments$date)
+print(head(df_headlines_sentiments))
+summary(df_headlines_sentiments)
+```
+```{R}
+library(plyr) 
+library(dplyr)
+library(tidyverse)
+df_headlines_sentiments$news_url = factor(df_headlines_sentiments$news_url)
+print(levels(df_headlines_sentiments$news_url))
+df_headlines_sentiments$news_name = revalue(df_headlines_sentiments$news_url,
+               c("https://www.dailymail.co.uk/home/index.html"="dailymail",
+                 "https://www.foxnews.com/" ="foxnews",
+                 "https://www.theguardian.com" = "guardian",
+                 "https://www.washingtonpost.com/" = "washingtonpost"))
+```
+
+```{R}
+sources = unique(df_headlines_sentiments$news_url)
+sources[1]
+summary(filter(df_headlines_sentiments, news_url==sources[1]))
+```
+
+```{R}
+```
+
+```{R}
+library(ggplot2)
+ggplot(data = df_headlines_sentiments, mapping = aes(x = news_name, y = fear)) +
+  geom_violin(alpha=0)+
+  geom_jitter(alpha = 0.3, color = "tomato")
+  
+  geom_point(alpha = 0.1, aes(color = trust))
+
+```
+
+
+```{R}
+ggplot(data = df_headlines_sentiments, mapping = aes(x = positive, y = joy, color = news_name)) +
+  geom_jitter(alpha = 0.05)+
+  facet_wrap(facets =  vars(news_name))+
+  xlim(0,7) + ylim(0,7)
+  
+  geom_point(alpha = 0.1, aes(color = trust))
+
+```
+#### How many articles are in the dataset, by source?
+```{R}
+ggplot(df_headlines_sentiments, aes(x = news_name)) +
+  geom_bar()
+```
+```{R}
+mean_sentiments = df_headlines_sentiments %>%
+  group_by(news_name) %>%
+  summarise(
+    meanpos = mean(positive),
+    meanneg = mean(negative),
+    meanjoy = mean(joy),
+    meandisgust = mean(disgust),
+    meananger = mean(anger),
+  )
+mean_sentiments
+
+
+mean_sentiments_long <- mean_sentiments %>%
+  pivot_longer(!news_name,names_to = "meanwhat", values_to = "mvalue")
+mean_sentiments_long
+```
+
+```{R}
+
+ggplot(data = mean_sentiments_long, mapping = aes(x = news_name, y = mvalue,color=meanwhat)) +
+  geom_point()
+
+```
+
+### Exercise + Assignment for today:
+
+* create new data.frames based on filters:
+ * Row contains "ukraine" or "peace" or "war".... you can be creative
+ * look for less common words: which source was the first to talk about swift? Or something else?
+* Then plot
+ * occurrences over time, colored by the news_name
+ * compare the sources
+* optional:
+ * make an interesting wordcloud
+ * fraction of occurrences of some words over time
+ * use the sentiment data: did the sentiments change over time? Did fear increase? What if you filter by a word and then look at the sentiments?
+
+
+
+
+```{R, echo=FALSE}
+library(dplyr)
+
+filterwords = "SWIFT|swift|Swift"
+df_putin <- df_headlines_sentiments %>% filter(grepl(filterwords,headlines))
+
+print(summary(df_putin))
+ggplot(df_putin, aes(x=date, fill=news_name)) + geom_bar()+ labs(title = paste0("Count of headlines with the word '",filterwords, "' by date"))
+
+
+```
+
+
+
+```{R, echo=FALSE}
+library(dplyr)
+
+filterwords = "Putin"
+df_putin <- df_headlines_sentiments %>% filter(grepl(filterwords,headlines))
+
+print(summary(df_putin))
+ggplot(df_putin, aes(x=date, fill=fear)) + geom_bar()+ labs(title = paste0("Count of headlines with the word '",filterwords, "' by date"))
+
+
+```
+
+
+```{R, echo=FALSE}
+ggplot(df_putin, aes(x=date)) + geom_bar()
+
+```
+
+
+
+
+
+
+
+# Predicting the news source based on the sentiments of a headline
+
+```{R}
+
+if(!require(caret)){
+  install.packages("caret") 
+  library(caret)
+}
+if(!require(xgboost)){
+  install.packages("xgboost") 
+  library(xgboost)
+}
+
+if(!require(lightgbm)){
+  install.packages("lightgbm") 
+  #install.packages("lightgbm", repos = "https://cran.r-project.org")
+  library(lightgbm)
+}
+
+if(!require(treeshap)){
+  # install.packages("devtools")
+  devtools::install_github('ModelOriented/treeshap') 
+  library(treeshap)
+}
+
+
+dffeatures = df_headlines_sentiments[c("anger","anticipation","disgust","fear","joy","sadness","surprise","trust","negative","positive")]
+dflabels = factor(df_headlines_sentiments$news_url)
+
+
+param <- list(objective = "reg:squarederror", max_depth = 6)
+xgb_model <-xgboost::xgboost(as.matrix(dffeatures[1:5000,]), params = param, label = dflabels[1:5000], nrounds = 200, verbose = 0)
+unified <- xgboost.unify(xgb_model, dffeatures[1:5000,])
+head(unified)
+
+i_split = 5000
+indexes_test = (i_split+1):10000
+
+l = sample(1:length(dflabels),size=20)
+pred <- predict(xgb_model, as.matrix(dffeatures[indexes_test,]))
+print(head(pred))
+pred_y = as.factor((levels(dflabels[indexes_test]))[round(pred)])
+dfpred = data.frame(pred[l],dflabels[l],pred_y[l])
+conf_mat = confusionMatrix(dflabels[indexes_test], pred_y[1:5000])
+print(conf_mat)
+
+err <- mean(pred_y != dflabels)
+print(paste("test-error=", err))
+
+treeshap1 <- treeshap(unified,  dffeatures, verbose = 0)
+treeshap1$shaps[1:3, 1:6]
+```
+
+
+```{R}
+
+if(!require(caret)){
+  install.packages("caret") 
+  library(caret)
+}
+
+if(!require(lightgbm)){
+  install.packages("lightgbm") 
+  #install.packages("lightgbm", repos = "https://cran.r-project.org")
+  library(lightgbm)
+}
+
+if(!require(treeshap)){
+  # install.packages("devtools")
+  devtools::install_github('ModelOriented/treeshap') 
+  library(treeshap)
+}
+
+
+dffeatures = df_headlines_sentiments[c("anger","anticipation","disgust","fear","joy","sadness","surprise","trust","negative","positive")]
+dflabels = factor(df_headlines_sentiments$news_url)
+
+
+n_classes=5
+params = list(
+    num_leaves = 4L
+    , learning_rate = 1.0
+    , objective = "multiclass"
+    , num_class = n_classes
+  )
+
+i_split = 5000
+xgb_model <-lightgbm(as.matrix(dffeatures[1:isplit,]), params = params, label = dflabels[1:isplit], nrounds = 200, verbose = 0)
+unified <- lightgbm.unify(xgb_model, dffeatures[1:5000,])
+head(unified)
+
+indexes_test = (i_split+1):(i_split*2)
+
+l = sample(1:i_split,size=20)
+pred <- predict(xgb_model, as.matrix(dffeatures[indexes_test,]))
+print(head(pred))
+
+
+list <- list()
+for (i in 1:i_split){
+    max = max(result[(i-1)*n_classes+1], result[(i-1)*n_classes+2], result[(i-1)*n_classes+3], result[(i-1)*n_classes+4], result[(i-1)*n_classes+5])
+    list[i] <- if_else(max == result[(i-1)*3+3], 3, if_else(max == result[(i-1)*3+2], 2, 1))
+}
+
+
+pred_y = as.factor((levels(dflabels[indexes_test]))[round(pred)])
+dfpred = data.frame(pred[l],dflabels[l],pred_y[l])
+conf_mat = confusionMatrix(dflabels[indexes_test], pred_y)
+dflabels[indexes_test]
+print(conf_mat)
+
+err <- mean(pred_y != dflabels)
+print(paste("test-error=", err))
+
+treeshap1 <- treeshap(unified,  dffeatures, verbose = 0)
+treeshap1$shaps[1:3, 1:6]
+```
+
+
+
+```{R}
+conf_table = as.data.frame(conf_mat$table)
+ggplot(conf_table, aes(Prediction,Reference, fill= Freq)) +
+        geom_tile() + geom_text(aes(label=Freq)) +
+        scale_fill_gradient(low="white", high="#009194") +
+        labs(x = "Reference",y = "Prediction")
+
+```
+
+
+```{R}
+
+
+if(!require(plotly)){
+  install.packages("plotly")
+  library(plotly)
+}
+i_headline = i_split + 1400
+print(df_headlines_sentiments[i_headline,])
+print(pred[i_headline-i_split])
+print(pred_y[i_headline-i_split])
+g = plot_contribution(treeshap1, obs = i_headline)
+#ggplotly(g)
+g
+```
+
+```{R}
+
+
+plot_feature_importance(treeshap1, max_vars = 12)
+
+```
+
+```{R}
+
+plot_feature_dependence(treeshap1, "positive")
+
+```
+
+```{R}
+
+plot_feature_dependence(treeshap1, "disgust")
+
+```
+
+
+
+```{R}
+```
