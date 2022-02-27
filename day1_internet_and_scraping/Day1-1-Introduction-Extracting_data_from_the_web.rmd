@@ -394,7 +394,7 @@ news_url = "https://www.washingtonpost.com/"
 news_selector = ".left.relative , .left.relative span, .center.relative span, .left.relative span"
 news_name ="washingtonpost"
 
-result_folder <- "D:/dev/r/EDSD_2022_working_with_digital_data/day1_internet_and_scraping/data/"
+result_folder <- "D:/dev/r/EDSD22_web_and_social_media_data/day1_internet_and_scraping/data/"
   
 # load the page from the internet:
 news_page <- read_html(news_url)

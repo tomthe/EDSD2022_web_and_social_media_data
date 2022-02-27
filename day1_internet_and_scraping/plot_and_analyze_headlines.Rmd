@@ -122,7 +122,7 @@ ggplot(df_putin, aes(x=date, fill=news_name)) + geom_bar()+ labs(title = paste0(
 ```{R, echo=FALSE}
 library(dplyr)
 
-filterwords = "Putin"
+filterwords = "Spain"
 df_putin <- df_headlines_sentiments %>% filter(grepl(filterwords,headlines))
 
 print(summary(df_putin))
@@ -230,7 +230,7 @@ params = list(
   )
 
 i_split = 5000
-xgb_model <-lightgbm(as.matrix(dffeatures[1:isplit,]), params = params, label = dflabels[1:isplit], nrounds = 200, verbose = 0)
+xgb_model <-lightgbm(as.matrix(dffeatures[1:i_split,]), params = params, label = dflabels[1:i_split], nrounds = 200, verbose = 0)
 unified <- lightgbm.unify(xgb_model, dffeatures[1:5000,])
 head(unified)
 
