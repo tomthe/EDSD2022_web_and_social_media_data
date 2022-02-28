@@ -207,11 +207,19 @@ If it worked, you can download the data as json, which can be easily imported in
 
 #### Twitter
 
+
+There are a number of tweet-data dumps somewhere in the internet with vastly different content. At the MPIDR we have a "1% sample" which contains 1 % of all tweets for the years 2012 to 2017. But I was not able to find it online. 
+
+In general: The Twitter API is very good, as long as you don't hit the Limits (~10 Million Tweets per Month for Academics after application with an institutional email adress and a description of your project, 500K tweets for everyone).
+
+Nevertheless, pushshift.io has some interesting and big twitter data:
+
 https://files.pushshift.io/twitter/
 
 https://files.pushshift.io/twitter/verified_feed/ - "This directory contains daily dumps of all publicly available verified tweets and retweets. Present daily volume from all verified accounts (~335k verified accounts) is around 2.5 million tweets per day. This should be ~100% of all verified tweets made for the day mentioned in the filename."
 
 
+Todo: how many GB per day? How to work with that?
 
 
 ### Government data sources and sources from supranational organisations
