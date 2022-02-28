@@ -1,10 +1,12 @@
 ---
 title: "Accessing and Analyzing Web and Social Media Data"
-date: "February 2022"
 author: "Tom Theile, Max-Planck-Institute for demographic research, theile@demogr.mpg.de"
+date: "February 2022"
 output:
+  html_document:
+    df_print: paged
   pdf_document: default
----
+---   
 
 ```{r setup, include=FALSE, warning=FALSE}
 pagebreak <- function() {
