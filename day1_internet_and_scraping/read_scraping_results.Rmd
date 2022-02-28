@@ -122,6 +122,7 @@ head(df_ukraine)
 
 ```
 
+Open plot_and_analyze_headlines.Rmd to go on.
 
 
 

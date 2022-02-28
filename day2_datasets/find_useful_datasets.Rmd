@@ -11,27 +11,9 @@ output:
 ----------------
 
 
-## What are datasets and data dumps?
+# Finding useful datasets
 
-**Dataset** is a general term for any collection of data. It often takes time and effort to create a dataset, but nevertheless there are a lot of high quality datasets available for free on the internet.
-
-A **data dump** is a special kind of dataset: It is often used to describe the export of a whole database (or a significant part of it) of a specific website.
-E.g. there are datadumps that contain all the data of the [OpenStreetMap](http://www.openstreetmap.org) project; Or all of the data of [Wikidata](https://www.wikidata.org); All of the english Wikipedia or all of the website Stack Overflow.
-There is even a collection of all reddit posts and all reddit comments.
-
-These data dumps are often provided to researchers for their analysis as a service and especially to prevent people from scraping the whole site.
-["As of 20 February 2022, there are 6,456,456 articles in the English Wikipedia"](https://en.wikipedia.org/wiki/Wikipedia:Size_of_Wikipedia), 
-scraping them all with Rvest would take 10 years, if you access 2 pages per second (which is a bit too fast for scraping and will probably get you blocked).
-
-Instead of scraping the whole site, you can download a compressed data dump of the English Wikipedia which is 20.47 GB in size and is a lot easier to work with.
-
-Working with large datasets can sometimes be a challenge. The format of the data is often different and special. Sometimes you don't have access to a computer with large enough RAM to fit the whole dataset into memory.
-We will do some exercises that will help you find out how to work with large datasets.
-
-
-## Finding useful datasets
-
-### Dataset search engines
+## Dataset search engines
 
 https://datasetsearch.research.google.com/ - Google Dataset Search. Search by keywords. Good coverage, but bad sorting of the results.
 
@@ -42,9 +24,20 @@ https://catalog.data.gov/dataset - The U.S. Government Catalog of Datasets. A lo
 https://www.kaggle.com/datasets - Kaggle is a free data science competition platform. Volunteers (mostly data scientists and machine learning engineers) upload datasets and "notebooks" that analyse those datasets. The focus is less on social siences. The advantage is that there will always be "notebooks" that work with exactly these datasets.
 
 
-### Noteworthy data dumps and data sources
+## Noteworthy data dumps and data sources
 
-#### Wikipedia text dumps
+### Reddit comments and submissions
+[Reddit](https://www.reddit.com)
+(almost) Every reddit comment from 2005 to June 2021: https://files.pushshift.io/reddit/comments/
+
+(almost) Every reddit submission from 2005 to June 2021: https://files.pushshift.io/reddit/submissions/ (10 GB compressed json for one month)
+
+(You can contact me if you want to work with this data or a subset of it. I have worked with it before)
+
+
+
+
+### Wikipedia text dumps
 
 The [Wikipedia](https://www.wikipedia.org) project offers not only a dump of all wikipedia articles for every language, but also the complete edit-history of all articles. Another interesting resource are the wikipedia access-statistics (https://dumps.wikimedia.org/other/accessstats/) and the wikipedia page-views (https://dumps.wikimedia.org/other/pageviews/).
 
@@ -54,7 +47,7 @@ The [Wikipedia](https://www.wikipedia.org) project offers not only a dump of all
   * edit history
 * Wikipedia access statistics: https://dumps.wikimedia.org/other/accessstats/
 
-#### Wikidata
+### Wikidata
 [Wikidata](https://www.wikidata.org) is a huge human-curated database of information about people, places, things and events - basically every "fact" of wikipedia (and much more) is stored in wikidata in a format that is easy to work with. The whole dump is around ~~40GB~~ 72GB of compressed json. There are more than 6 Million entries about persons, 2 Million entries about "administrative territorial entities" (e.g. countries, states, provinces, etc.), 22.5 Million entries about scholarly articles, 300 000 entries about movies, etc.
 
 Examples: 
@@ -71,24 +64,16 @@ You can for example adapt the query to get all the movies of a person:
 **Exercise 2.1:** Use https://query.wikidata.org/ to generate a dataset of all Hospitals in the world.
 
 
-#### Reddit comments and submissions
-[Reddit](https://www.reddit.com)
-(almost) Every reddit comment from 2005 to June 2021: https://files.pushshift.io/reddit/comments/
-
-(almost) Every reddit submission from 2005 to June 2021: https://files.pushshift.io/reddit/submissions/ (10 GB compressed json for one month)
-
-(You can contact me if you want to work with this data or a subset of it. I have worked with it before)
-
-#### Stack Overflow
+### Stack Overflow
 
 [Stack Overflow](https://stackoverflow.com) is a question-answer site. Mostly for programmers and scientist. The whole dump can be downloaded  and is about 40 GB compressed xml. It can also be accessed online here: https://data.stackexchange.com/stackoverflow/query/new
 
-#### Project Gutenberg
+### Project Gutenberg
 
 A large collection of books that in the public domain. https://www.gutenberg.org/robot/harvest
 The books can also be downloaded independently and are a nice resource for e-readers.
 
-#### OpenStreetMap
+### OpenStreetMap
 [OpenStreetMap](http://www.openstreetmap.org) is the "Wikipedia of maps", a map of the whole world that is build by volunteers and available under the [OpenStreetMap license](https://www.openstreetmap.org/copyright) (which is permissive).
 
 You can download the whole dump or parts of it from https://archive.org/details/osmdata or https://wiki.openstreetmap.org/wiki/Planet.osm 
@@ -203,33 +188,40 @@ If it worked, you can download the data as json, which can be easily imported in
 
 ```
 
-**Exercise:** Download the location data of all schools in a city of your choice.
+**Exercise 2.2:** Download the location data of all schools in a city of your choice.
 
-#### Twitter
+### Twitter
 
 
-There are a number of tweet-data dumps somewhere in the internet with vastly different content. At the MPIDR we have a "1% sample" which contains 1 % of all tweets for the years 2012 to 2017. But I was not able to find it online. 
+There are a number of tweet-data dumps somewhere in the internet with vastly different content. At the MPIDR we have a "1% sample" which contains 1 % of all tweets from 2012 to April 2018 with 20 to 50 GB per month = 2.6TB in total. ~~But I was not able to find it online (if you want to work with it, you could get access through the MPIDR).~~ You can download this sample from the Internet Archive: https://archive.org/details/twitterstream
 
-In general: The Twitter API is very good, as long as you don't hit the Limits (~10 Million Tweets per Month for Academics after application with an institutional email adress and a description of your project, 500K tweets for everyone).
+We also have a dump of all geo-located tweets from Europe from 2016-2018 (-> 150 GB total) at the MPIDR.
+
+In general: The Twitter API is very good, as long as you don't hit the Limits (~10 Million Tweets per Month for Academics after application with an institutional email adress and a description of your project, 500K tweets for everyone), you should work with the API. But: 10 Million tweets is only a tiny fraction of Twitter!
 
 Nevertheless, pushshift.io has some interesting and big twitter data:
 
 https://files.pushshift.io/twitter/
 
-https://files.pushshift.io/twitter/verified_feed/ - "This directory contains daily dumps of all publicly available verified tweets and retweets. Present daily volume from all verified accounts (~335k verified accounts) is around 2.5 million tweets per day. This should be ~100% of all verified tweets made for the day mentioned in the filename."
+https://files.pushshift.io/twitter/verified_feed/ - "This directory contains daily dumps of all publicly available verified tweets and retweets. Present daily volume from all verified accounts (~335k verified accounts) is around 2.5 million tweets per day = ~600MB per day. This should be ~100% of all verified tweets made for the day mentioned in the filename." But only available for October and November 2019.
+
+#### How to Work with so much data?
+
+Again: Get a big computer!
+
+Then: Only open a fraction at a time. Extract, filter, save.
+
+Be patient.
 
 
-Todo: how many GB per day? How to work with that?
-
-
-### Government data sources and sources from supranational organisations
+## Government data sources and sources from supranational organisations
 
 Countries and governments produce and store a lot of data. Some of that is easily available through government portals. Some of it can be requested.
 
 https://dataportals.org/ is a list of portals that provide access to government data.
 
 
-#### UK data
+### UK data
 
 https://ukdataservice.ac.uk/find-data/browse/ - "Funded by UK Research and Innovation (UKRI), the Service integrates and builds on investments the Economic and Social Research Council has made in UK research infrastructure for decades, including the UK Data Archive, Economic and Social Data Service, the Secure Data Service, Census Programme and Survey Question Bank. Now, on those foundations, we continue to house the largest collection of economic, social and population data in the UK."
 
@@ -239,7 +231,7 @@ https://data.gov.uk/ - "Since 2010 data.gov.uk has been helping people to find a
 
 https://www.ons.gov.uk/ - [Office for national statistics](https://www.ons.gov.uk/)
 
-#### Germany data
+### Germany data
 
 https://www.govdata.de/ - "Über GovData bieten öffentliche Stellen aus Bund, Ländern und Kommunen Daten der Verwaltung an. So soll insbesondere Verwaltungsmitarbeitern, Bürgern, Unternehmen und Wissenschaftlern die Möglichkeit gegeben werden, über einen zentralen Einstiegspunkt Daten und Informationen der öffentlichen Verwaltung in Deutschland ebenenübergreifend zugreifen zu können. Ziel ist es, dass diese „Datenschätze" aus der Verwaltung besser genutzt und weiterverwendet werden, so dass durch neue Ideen sowie Kombination und Analyse neue Erkenntnisse aus den vorhandenen Daten gewonnen und neue Anwendungsfelder erschlossen werden können."
 
@@ -247,15 +239,15 @@ https://www.destatis.de/DE/Service/Suche/suche_node.html - official website of t
 
 https://gdz.bkg.bund.de/index.php/default/open-data.html - mostly maps - "Kostenfreie Geodaten und Webdienste, INSPIRE-konforme Webdienste und Kartendownloads"
 
-#### US data
+### US data
 
 https://www.data.gov/ - official site - "The home of the U.S. Government’s open data. Here you will find data, tools, and resources to conduct research, develop web and mobile applications, design data visualizations, and more."
 
-#### EU data
+### EU data
 
 https://data.europa.eu/en - "The official portal for European data"
 
-#### World Bank
+### World Bank
 
 https://datacatalog.worldbank.org/
 [search](https://datacatalog.worldbank.org/search?q=&sort=last_updated_date%20desc)
@@ -263,27 +255,11 @@ very good for world-wide economic indicators (e.g. GDP, unemployment, etc.) and 
 
 The data is accessible through an online interface, but also downloadable as compressed csv-files. Another way to get the data is to use the packacke [World Bank Development indicators for R](https://www.r-project.org/nosvn/pandoc/WDI.html), but I can't recommend it.
 
-**Exercise 2.2:** Download the GDP data of all countries in the world for all available years.
+**Exercise 2.3:** Download the GDP data of all countries in the world for all available years.
 
-#### OECD
+### OECD
 
 https://stats.oecd.org/ - official site - "OECD.Stat includes data and metadata for OECD countries and selected non-member economies."
-
-
-### Freedom of information request
-
-Most countries have a right similar to the [freedom of information act](https://en.wikipedia.org/wiki/Freedom_of_Information_Act_(United_States) of the United States.
-It gives its citizens the right to access and use the data of their country. But it is bound to forms, fees and waiting times. The answers may sometimes be in a hard to use format (pdf-scans...).
-But if you know that your government does have the information you want, this might be a really go way to get you valuable data. But make sure that you searched for this data in
-open data portals before.
-
-I have personally never accessed data this way, but here are some resources to help you:
-
-https://en.wikipedia.org/wiki/Freedom_of_information_laws_by_country
-
-US-specific: https://foia.wiki/wiki/Making_a_FOIA_Request
-
-
 
 
 ### News datasets
@@ -304,13 +280,32 @@ This is still a huge dataset that you can't process on your laptop. But there is
 
 
 
+## Freedom of information request
+
+Most countries have a right similar to the [freedom of information act](https://en.wikipedia.org/wiki/Freedom_of_Information_Act_(United_States) of the United States.
+It gives its citizens the right to access and use the data of their country. But it is bound to forms, fees and waiting times. The answers may sometimes be in a hard to use format (pdf-scans...).
+But if you know that your government does have the information you want, this might be a really go way to get you valuable data. But make sure that you searched for this data in
+open data portals before.
+
+I have personally never accessed data this way, but here are some resources to help you:
+
+https://en.wikipedia.org/wiki/Freedom_of_information_laws_by_country
+
+US-specific: https://foia.wiki/wiki/Making_a_FOIA_Request
+
+
+
+
 ## Working with datasets
 
+We already worked through some examples. Let's do some more
 
 ### Converting data formats
 
 Not every data provider serves the data in the format you want. But with some knowledge or R you can always convert the data to the format you need.
 
-**Exercise 2.3:** Download more Data just like you did in exercise 2.2 and convert it to the following format and save it as a csv-file (use the [countrycode package](https://github.com/vincentarelbundock/countrycode) to convert the country names to country codes, if you need to):
+**Exercise 2.4:** Download more Data just like you did in exercise 2.2 and convert it to the following format and save it as a csv-file (use the [countrycode package](https://github.com/vincentarelbundock/countrycode) to convert the country names to country codes, if you need to):
 
 Country, ISO3_countrycode, year, GDP, population, GDP per capita, GDP per capita (PPP)
+
+--> See the file exercise_2.4.R

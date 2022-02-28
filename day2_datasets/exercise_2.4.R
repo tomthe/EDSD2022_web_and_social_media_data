@@ -1,16 +1,19 @@
 
-# **Exercise 2.3.1:** Download more Data just like you did in exercise 2.2 
+# Transforming tables is quite important, as data is not always in the best format.
+# But it is not always easy, I still have to use some of trial and error to it.
+# It is important to learn: It is possible to transform it however you want, 
+# you just have to google a lot...
+
+# **Exercise 2.4.1:** Download more Data just like you did in exercise 2.2 
 # and convert it to the following format and save it as a csv-file 
 # (you can use the [countrycode package](https://github.com/vincentarelbundock/countrycode)
 # to convert the country names to country codes, if you need to):
 #
-# Country, ISO3_countrycode, year, GDP, population, GDP per capita, GDP per capita (PPP)
-# country
+# country (name)
+# ISO3 countrycode
 # total population
 # rural population (percentage)  
 # urban population (percentage)
-# rural population growth (percentage)
-# urban population growth (percentage)
 
 # 1) download GDP data from the world-bank:
 # open https://databank.worldbank.org/source/population-estimates-and-projections#
@@ -57,7 +60,7 @@ view(df_population_tidy)
 
 
 
-# **Exercise 2.3.2:** Now use the "WDI"-package to do the same thing. 
+# **Exercise 2.4.2:** Now use the "WDI"-package to do the same thing. 
 # You can find instructions on how to install and use the WDI-package here:
 # https://github.com/vincentarelbundock/WDI
 # 
@@ -75,18 +78,54 @@ WDIsearch("rural population*")
 #"Rural population growth (annual %)" 
 #"Rural population (% of total population)"  
 
-dat = WDI(indicator=c("SP.URB.TOTL.IN.ZS", "SP.RUR.TOTL.ZS") , country=c('DE','CA','US','FR'), start=1960, end=2012)
+WDIsearch("gdp.*ppp*")
+#"Rural population growth (annual %)" 
+#"Rural population (% of total population)"  
+
+dat = WDI(indicator=c("SP.URB.TOTL.IN.ZS", "SP.RUR.TOTL.ZS","NY.GDP.PCAP.PP.KD") , country=c('DE','CA','US','FR'), start=1960, end=2012)
+view(dat)
+
+
+# 2.4.3 Explore the WDIsearch with your own queries, Download data that you find interesting!
+# use the years 2000 to 2020
+# use the following country-code list (unless you want are interested in other countries, then feel free to use anything):
+countrycodes_europe <- c(
+  'AL', 'AD', 'AM', 'AT', 'BY', 'BE', 'BA', 'BG', 'CH', 'CY', 'CZ', 'DE',
+  'DK', 'EE', 'ES', 'FO', 'FI', 'FR', 'GB', 'GE', 'GI', 'GR', 'HU', 'HR',
+  'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MC', 'MK', 'MT', 'NO', 'NL', 
+  'PL', 'PT', 'RO', 'RS', 'RU', 'SE', 'SI', 'SK', 'SM', 'TR', 'UA'
+)
+# 2.4.4 Make some Plots of these datasources
+
+dat = WDI(indicator=c("SP.URB.TOTL.IN.ZS", "SP.RUR.TOTL.ZS","NY.GDP.PCAP.PP.KD") , country=countrycodes_europe, start=2000, end=2020)
 view(dat)
 
 library(ggplot2)
-g <- ggplot(dat, aes(year, SP.RUR.TOTL.ZS, color=country)) + geom_line(aes(frame=country)) + 
+g <- ggplot(dat, aes(year, SP.RUR.TOTL.ZS, color=country)) + geom_point() + 
+  xlab('Year') + ylab('Rural population %')
+g
+
+# Filter your Data on-the-fly:
+g <- ggplot(dat %>% filter(year>1990), aes(year, NY.GDP.PCAP.PP.KD, color=country)) + geom_line(aes()) + 
   xlab('Year') + ylab('GDP per capita')
+g
 
 
 
-WDIsearch("elevation")
+# Convert your ggplot-graphs into interactive, animated html-graphs with plotly:
 
 install.packages("plotly")
 library(plotly)
 
+# create a plot, just like you would create a ggplot2-plot:
+g <- ggplot(dat %>% filter(year>1990), aes(x=NY.GDP.PCAP.PP.KD, y= SP.URB.TOTL.IN.ZS, frame=year, color=country)) + geom_point()
+g
+
+# notice that we added frame=year this means there will be a new dimension: frame
+# one graph for every year:
 ggplotly(g)
+
+
+
+#######################################
+

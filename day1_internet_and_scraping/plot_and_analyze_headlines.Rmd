@@ -93,7 +93,7 @@ ggplot(data = mean_sentiments_long, mapping = aes(x = news_name, y = mvalue,colo
 
 * create new data.frames based on filters:
  * Row contains "ukraine" or "peace" or "war".... you can be creative
- * look for less common words: which source was the first to talk about swift? Or something else?
+ * look for less common words: which source was the first to talk about swift? Or something else? 
 * Then plot
  * occurrences over time, colored by the news_name
  * compare the sources
