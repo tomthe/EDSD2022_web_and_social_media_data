@@ -470,7 +470,7 @@ We will:
  * use a sentiment-analysis package to quantify the emotions of headlines
 
 
-
+--> scrape_news_with_url_article.R
 --> schedule.R
 --> read_scraping_results.Rmd
 --> plot_and_analyze_headlines.Rmd
