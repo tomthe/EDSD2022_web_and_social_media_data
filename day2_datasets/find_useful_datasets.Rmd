@@ -3,8 +3,8 @@ title: "Finding and working with large datasets"
 date: "2022"
 author: "Tom Theile, Max-Planck-Institute for demographic research, theile@demogr.mpg.de"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 
