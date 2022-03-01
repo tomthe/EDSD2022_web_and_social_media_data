@@ -369,39 +369,10 @@ research, <a href="mailto:theile@demogr.mpg.de" class="email">theile@demogr.mpg.
 
 
 <hr />
-<div id="what-are-datasets-and-data-dumps" class="section level2">
-<h2>What are datasets and data dumps?</h2>
-<p><strong>Dataset</strong> is a general term for any collection of
-data. It often takes time and effort to create a dataset, but
-nevertheless there are a lot of high quality datasets available for free
-on the internet.</p>
-<p>A <strong>data dump</strong> is a special kind of dataset: It is
-often used to describe the export of a whole database (or a significant
-part of it) of a specific website. E.g. there are datadumps that contain
-all the data of the <a href="http://www.openstreetmap.org">OpenStreetMap</a> project; Or all of
-the data of <a href="https://www.wikidata.org">Wikidata</a>; All of the
-english Wikipedia or all of the website Stack Overflow. There is even a
-collection of all reddit posts and all reddit comments.</p>
-<p>These data dumps are often provided to researchers for their analysis
-as a service and especially to prevent people from scraping the whole
-site. <a href="https://en.wikipedia.org/wiki/Wikipedia:Size_of_Wikipedia">“As of
-20 February 2022, there are 6,456,456 articles in the English
-Wikipedia”</a>, scraping them all with Rvest would take 10 years, if you
-access 2 pages per second (which is a bit too fast for scraping and will
-probably get you blocked).</p>
-<p>Instead of scraping the whole site, you can download a compressed
-data dump of the English Wikipedia which is 20.47 GB in size and is a
-lot easier to work with.</p>
-<p>Working with large datasets can sometimes be a challenge. The format
-of the data is often different and special. Sometimes you don’t have
-access to a computer with large enough RAM to fit the whole dataset into
-memory. We will do some exercises that will help you find out how to
-work with large datasets.</p>
-</div>
-<div id="finding-useful-datasets" class="section level2">
-<h2>Finding useful datasets</h2>
-<div id="dataset-search-engines" class="section level3">
-<h3>Dataset search engines</h3>
+<div id="finding-useful-datasets" class="section level1">
+<h1>Finding useful datasets</h1>
+<div id="dataset-search-engines" class="section level2">
+<h2>Dataset search engines</h2>
 <p><a href="https://datasetsearch.research.google.com/" class="uri">https://datasetsearch.research.google.com/</a> - Google
 Dataset Search. Search by keywords. Good coverage, but bad sorting of
 the results.</p>
@@ -419,20 +390,36 @@ those datasets. The focus is less on social siences. The advantage is
 that there will always be “notebooks” that work with exactly these
 datasets.</p>
 </div>
-<div id="noteworthy-data-dumps" class="section level3">
-<h3>Noteworthy data dumps</h3>
-<div id="wikipedia-text-dumps" class="section level4">
-<h4>Wikipedia text dumps</h4>
-<p><a href="https://www.wikipedia.org">Wikipedia</a> off</p>
+<div id="noteworthy-data-dumps-and-data-sources" class="section level2">
+<h2>Noteworthy data dumps and data sources</h2>
+<div id="reddit-comments-and-submissions" class="section level3">
+<h3>Reddit comments and submissions</h3>
+<p><a href="https://www.reddit.com">Reddit</a> (almost) Every reddit
+comment from 2005 to June 2021: <a href="https://files.pushshift.io/reddit/comments/" class="uri">https://files.pushshift.io/reddit/comments/</a></p>
+<p>(almost) Every reddit submission from 2005 to June 2021: <a href="https://files.pushshift.io/reddit/submissions/" class="uri">https://files.pushshift.io/reddit/submissions/</a> (10 GB
+compressed json for one month)</p>
+<p>(You can contact me if you want to work with this data or a subset of
+it. I have worked with it before)</p>
+</div>
+<div id="wikipedia-text-dumps" class="section level3">
+<h3>Wikipedia text dumps</h3>
+<p>The <a href="https://www.wikipedia.org">Wikipedia</a> project offers
+not only a dump of all wikipedia articles for every language, but also
+the complete edit-history of all articles. Another interesting resource
+are the wikipedia access-statistics (<a href="https://dumps.wikimedia.org/other/accessstats/" class="uri">https://dumps.wikimedia.org/other/accessstats/</a>) and the
+wikipedia page-views (<a href="https://dumps.wikimedia.org/other/pageviews/" class="uri">https://dumps.wikimedia.org/other/pageviews/</a>).</p>
 <ul>
 <li>overview: <a href="https://dumps.wikimedia.org/" class="uri">https://dumps.wikimedia.org/</a></li>
-<li>whole text:</li>
+<li>available:
+<ul>
+<li>whole text in many languages</li>
 <li>edit history</li>
+</ul></li>
 <li>Wikipedia access statistics: <a href="https://dumps.wikimedia.org/other/accessstats/" class="uri">https://dumps.wikimedia.org/other/accessstats/</a></li>
 </ul>
 </div>
-<div id="wikidata" class="section level4">
-<h4>Wikidata</h4>
+<div id="wikidata" class="section level3">
+<h3>Wikidata</h3>
 <p><a href="https://www.wikidata.org">Wikidata</a> is a huge
 human-curated database of information about people, places, things and
 events - basically every “fact” of wikipedia (and much more) is stored
@@ -442,7 +429,11 @@ Million entries about persons, 2 Million entries about “administrative
 territorial entities” (e.g. countries, states, provinces, etc.), 22.5
 Million entries about scholarly articles, 300 000 entries about movies,
 etc.</p>
-<p>Examples: * Barcelona - <a href="https://www.wikidata.org/wiki/Q1492" class="uri">https://www.wikidata.org/wiki/Q1492</a> * Big City - <a href="https://www.wikidata.org/wiki/Q1549591" class="uri">https://www.wikidata.org/wiki/Q1549591</a></p>
+<p>Examples:</p>
+<ul>
+<li>Barcelona - <a href="https://www.wikidata.org/wiki/Q1492" class="uri">https://www.wikidata.org/wiki/Q1492</a></li>
+<li>Big City - <a href="https://www.wikidata.org/wiki/Q1549591" class="uri">https://www.wikidata.org/wiki/Q1549591</a></li>
+</ul>
 <p>But it is not easy to handle the full dump in R. I was not able to
 decompress it partially, which is possible to do in Python. An easy
 start would be the library <a href="https://github.com/kensho-technologies/qwikidata">qwikidata</a>.</p>
@@ -452,33 +443,24 @@ through the query-examples: <a href="https://www.wikidata.org/wiki/Wikidata:SPAR
 and probably find something that you can adapt to your use case.</p>
 <p>You can for example adapt the query to get all the movies of a
 person:</p>
-<p><strong>Exercise:</strong> Use <a href="https://query.wikidata.org/" class="uri">https://query.wikidata.org/</a> to generate a dataset of all
-Hospitals in the world. Please</p>
+<p><strong>Exercise 2.1:</strong> Use <a href="https://query.wikidata.org/" class="uri">https://query.wikidata.org/</a> to generate a dataset of all
+Hospitals in the world.</p>
 </div>
-<div id="reddit-comments-and-submissions" class="section level4">
-<h4>Reddit comments and submissions</h4>
-<p><a href="https://www.reddit.com">Reddit</a> (almost) Every reddit
-comment from 2005 to June 2021: <a href="https://files.pushshift.io/reddit/comments/" class="uri">https://files.pushshift.io/reddit/comments/</a></p>
-<p>(almost) Every reddit submission from 2005 to June 2021: <a href="https://files.pushshift.io/reddit/submissions/" class="uri">https://files.pushshift.io/reddit/submissions/</a> (10 GB
-compressed json for one month)</p>
-<p>(You can contact me if you want to work with this data or a subset
-thereof. I have worked with it before)</p>
-</div>
-<div id="stack-overflow" class="section level4">
-<h4>Stack Overflow</h4>
+<div id="stack-overflow" class="section level3">
+<h3>Stack Overflow</h3>
 <p><a href="https://stackoverflow.com">Stack Overflow</a> is a
 question-answer site. Mostly for programmers and scientist. The whole
 dump can be downloaded and is about 40 GB compressed xml. It can also be
 accessed online here: <a href="https://data.stackexchange.com/stackoverflow/query/new" class="uri">https://data.stackexchange.com/stackoverflow/query/new</a></p>
 </div>
-<div id="project-gutenberg" class="section level4">
-<h4>Project Gutenberg</h4>
+<div id="project-gutenberg" class="section level3">
+<h3>Project Gutenberg</h3>
 <p>A large collection of books that in the public domain. <a href="https://www.gutenberg.org/robot/harvest" class="uri">https://www.gutenberg.org/robot/harvest</a> The books can
 also be downloaded independently and are a nice resource for
 e-readers.</p>
 </div>
-<div id="openstreetmap" class="section level4">
-<h4>OpenStreetMap</h4>
+<div id="openstreetmap" class="section level3">
+<h3>OpenStreetMap</h3>
 <p><a href="http://www.openstreetmap.org">OpenStreetMap</a> is the
 “Wikipedia of maps”, a map of the whole world that is build by
 volunteers and available under the <a href="https://www.openstreetmap.org/copyright">OpenStreetMap license</a>
@@ -586,30 +568,52 @@ imported into R.</p>
     ]
     }
 </code></pre>
-<p><strong>Exercise:</strong> Download the location data of all schools
-in a city of your choice.</p>
+<p><strong>Exercise 2.2:</strong> Download the location data of all
+schools in a city of your choice.</p>
 </div>
-<div id="twitter" class="section level4">
-<h4>Twitter</h4>
+<div id="twitter" class="section level3">
+<h3>Twitter</h3>
+<p>There are a number of tweet-data dumps somewhere in the internet with
+vastly different content. At the MPIDR we have a “1% sample” which
+contains 1 % of all tweets from 2012 to April 2018 with 20 to 50 GB per
+month = 2.6TB in total. <del>But I was not able to find it online (if
+you want to work with it, you could get access through the MPIDR).</del>
+You can download this sample from the Internet Archive: <a href="https://archive.org/details/twitterstream" class="uri">https://archive.org/details/twitterstream</a></p>
+<p>We also have a dump of all geo-located tweets from Europe from
+2016-2018 (-&gt; 150 GB total) at the MPIDR.</p>
+<p>In general: The Twitter API is very good, as long as you don’t hit
+the Limits (~10 Million Tweets per Month for Academics after application
+with an institutional email adress and a description of your project,
+500K tweets for everyone), you should work with the API. But: 10 Million
+tweets is only a tiny fraction of Twitter!</p>
+<p>Nevertheless, pushshift.io has some interesting and big twitter
+data:</p>
 <p><a href="https://files.pushshift.io/twitter/" class="uri">https://files.pushshift.io/twitter/</a></p>
 <p><a href="https://files.pushshift.io/twitter/verified_feed/" class="uri">https://files.pushshift.io/twitter/verified_feed/</a> -
 “This directory contains daily dumps of all publicly available verified
 tweets and retweets. Present daily volume from all verified accounts
-(~335k verified accounts) is around 2.5 million tweets per day. This
-should be ~100% of all verified tweets made for the day mentioned in the
-filename.”</p>
+(~335k verified accounts) is around 2.5 million tweets per day = ~600MB
+per day. This should be ~100% of all verified tweets made for the day
+mentioned in the filename.” But only available for October and November
+2019.</p>
+<div id="how-to-work-with-so-much-data" class="section level4">
+<h4>How to Work with so much data?</h4>
+<p>Again: Get a big computer!</p>
+<p>Then: Only open a fraction at a time. Extract, filter, save.</p>
+<p>Be patient.</p>
 </div>
 </div>
-<div id="government-data-sources-and-sources-from-supranational-organisations" class="section level3">
-<h3>Government data sources and sources from supranational
-organisations</h3>
+</div>
+<div id="government-data-sources-and-sources-from-supranational-organisations" class="section level2">
+<h2>Government data sources and sources from supranational
+organisations</h2>
 <p>Countries and governments produce and store a lot of data. Some of
 that is easily available through government portals. Some of it can be
 requested.</p>
 <p><a href="https://dataportals.org/" class="uri">https://dataportals.org/</a> is a list of portals that
 provide access to government data.</p>
-<div id="uk-data" class="section level4">
-<h4>UK data</h4>
+<div id="uk-data" class="section level3">
+<h3>UK data</h3>
 <p><a href="https://ukdataservice.ac.uk/find-data/browse/" class="uri">https://ukdataservice.ac.uk/find-data/browse/</a> - “Funded
 by UK Research and Innovation (UKRI), the Service integrates and builds
 on investments the Economic and Social Research Council has made in UK
@@ -628,8 +632,8 @@ In March 2018, we re-designed the site and launched the Find open data
 service.”</p>
 <p><a href="https://www.ons.gov.uk/" class="uri">https://www.ons.gov.uk/</a> - <a href="https://www.ons.gov.uk/">Office for national statistics</a></p>
 </div>
-<div id="germany-data" class="section level4">
-<h4>Germany data</h4>
+<div id="germany-data" class="section level3">
+<h3>Germany data</h3>
 <p><a href="https://www.govdata.de/" class="uri">https://www.govdata.de/</a> - “Über GovData bieten
 öffentliche Stellen aus Bund, Ländern und Kommunen Daten der Verwaltung
 an. So soll insbesondere Verwaltungsmitarbeitern, Bürgern, Unternehmen
@@ -646,37 +650,62 @@ Anwendungsfelder erschlossen werden können.”</p>
 - mostly maps - “Kostenfreie Geodaten und Webdienste, INSPIRE-konforme
 Webdienste und Kartendownloads”</p>
 </div>
-<div id="us-data" class="section level4">
-<h4>US data</h4>
+<div id="us-data" class="section level3">
+<h3>US data</h3>
 <p><a href="https://www.data.gov/" class="uri">https://www.data.gov/</a>
 - official site - “The home of the U.S. Government’s open data. Here you
 will find data, tools, and resources to conduct research, develop web
 and mobile applications, design data visualizations, and more.”</p>
 </div>
-<div id="eu-data" class="section level4">
-<h4>EU data</h4>
+<div id="eu-data" class="section level3">
+<h3>EU data</h3>
 <p><a href="https://data.europa.eu/en" class="uri">https://data.europa.eu/en</a> - “The official portal for
 European data”</p>
 </div>
-<div id="world-bank" class="section level4">
-<h4>World Bank</h4>
+<div id="world-bank" class="section level3">
+<h3>World Bank</h3>
 <p><a href="https://datacatalog.worldbank.org/" class="uri">https://datacatalog.worldbank.org/</a> <a href="https://datacatalog.worldbank.org/search?q=&amp;sort=last_updated_date%20desc">search</a>
 very good for world-wide economic indicators (e.g. GDP, unemployment,
 etc.) and for their <a href="https://databank.worldbank.org/reports.aspx?source=world-development-indicators">world
 development indicators</a></p>
 <p>The data is accessible through an online interface, but also
-downloadable as compressed csv-files.</p>
-<p><strong>Exercise 2.2:</strong> Download the GDP data of all countries
-in the world for the years 2000-2020.</p>
+downloadable as compressed csv-files. Another way to get the data is to
+use the packacke <a href="https://www.r-project.org/nosvn/pandoc/WDI.html">World Bank
+Development indicators for R</a>, but I can’t recommend it.</p>
+<p><strong>Exercise 2.3:</strong> Download the GDP data of all countries
+in the world for all available years.</p>
 </div>
-<div id="oecd" class="section level4">
-<h4>OECD</h4>
+<div id="oecd" class="section level3">
+<h3>OECD</h3>
 <p><a href="https://stats.oecd.org/" class="uri">https://stats.oecd.org/</a> - official site - “OECD.Stat
 includes data and metadata for OECD countries and selected non-member
 economies.”</p>
 </div>
-<div id="freedom-of-information" class="section level4">
-<h4>Freedom of information</h4>
+<div id="news-datasets" class="section level3">
+<h3>News datasets</h3>
+<p>We started to build our own news dataset. But as you can see, it will
+not be very large and we will not be able to look into the past. There
+are some other resources you can tap if you want to use news as a
+datasource:</p>
+<p><a href="https://components.one/datasets/all-the-news-2-news-articles-dataset/" class="uri">https://components.one/datasets/all-the-news-2-news-articles-dataset/</a>
+- “2.7 million news articles and essays from 27 American publications.
+Includes date, title, publication, article text, publication name, year,
+month, and URL (for some). Articles mostly span from 2013 to early
+2020.” 500MB compressed text.</p>
+<p><a href="https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research#News_articles" class="uri">https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research#News_articles</a>
+- a small list of some small news datasets.</p>
+<div id="filtering-the-internet-archive" class="section level4">
+<h4>Filtering the internet archive</h4>
+<p>The internet archive regularly scrapes the whole internet and stores
+all the data. They provide the scraped data for free. They also provide
+a subset of the data that covers only news-websites. This is still a
+huge dataset that you can’t process on your laptop. But there is a nice
+script that you can use to download, filter and process the data: <a href="https://github.com/fhamborg/news-please/blob/master/newsplease/examples/commoncrawl.py" class="uri">https://github.com/fhamborg/news-please/blob/master/newsplease/examples/commoncrawl.py</a></p>
+</div>
+</div>
+</div>
+<div id="freedom-of-information-request" class="section level2">
+<h2>Freedom of information request</h2>
 <p>Most countries have a right similar to the [freedom of information
 act](<a href="https://en.wikipedia.org/wiki/Freedom_of_Information_Act_(United_States)" class="uri">https://en.wikipedia.org/wiki/Freedom_of_Information_Act_(United_States)</a>
 of the United States. It gives its citizens the right to access and use
@@ -691,34 +720,23 @@ resources to help you:</p>
 <p><a href="https://en.wikipedia.org/wiki/Freedom_of_information_laws_by_country" class="uri">https://en.wikipedia.org/wiki/Freedom_of_information_laws_by_country</a></p>
 <p>US-specific: <a href="https://foia.wiki/wiki/Making_a_FOIA_Request" class="uri">https://foia.wiki/wiki/Making_a_FOIA_Request</a></p>
 </div>
-</div>
-<div id="news-datasets" class="section level3">
-<h3>News datasets</h3>
-<p>We started to build our own news dataset. But as you can see, it will
-not be very large and we will not be able to look into the past.
-Luckily, there are some resources you can tap, if you want to use news
-as a datasource:</p>
-<div id="table-from-wikipedia" class="section level4">
-<h4>Table from Wikipedia</h4>
-<p><a href="https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research#News_articles" class="uri">https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research#News_articles</a></p>
-</div>
-<div id="section" class="section level4">
-<h4></h4>
-<p><a href="https://components.one/datasets/all-the-news-2-news-articles-dataset/" class="uri">https://components.one/datasets/all-the-news-2-news-articles-dataset/</a>
-- “2.7 million news articles and essays from 27 American publications.
-Includes date, title, publication, article text, publication name, year,
-month, and URL (for some). Articles mostly span from 2013 to early
-2020.”</p>
-</div>
-</div>
-</div>
 <div id="working-with-datasets" class="section level2">
 <h2>Working with datasets</h2>
+<p>We already worked through some examples. Let’s do some more</p>
 <div id="converting-data-formats" class="section level3">
 <h3>Converting data formats</h3>
 <p>Not every data provider serves the data in the format you want. But
 with some knowledge or R you can always convert the data to the format
 you need.</p>
+<p><strong>Exercise 2.4:</strong> Download more Data just like you did
+in exercise 2.2 and convert it to the following format and save it as a
+csv-file (use the <a href="https://github.com/vincentarelbundock/countrycode">countrycode
+package</a> to convert the country names to country codes, if you need
+to):</p>
+<p>Country, ISO3_countrycode, year, GDP, population, GDP per capita, GDP
+per capita (PPP)</p>
+<p>–&gt; See the file exercise_2.4.R</p>
+</div>
 </div>
 </div>
 
