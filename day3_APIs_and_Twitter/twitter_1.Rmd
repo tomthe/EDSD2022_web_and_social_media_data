@@ -1,0 +1,323 @@
+---
+title: "Twitter API 1 - The free track"
+author: "Tom Theile"
+date: "1 3 2022"
+output: html_document
+---
+
+# Accessing the Twitter API
+
+This tutorial is vagually based on this official tutorial from Twitter: https://developer.twitter.com/en/docs/tutorials/getting-started-with-r-and-v2-of-the-twitter-api
+
+### Getting access
+
+With every request to the Twitter API you have to send a personal access key, the API-token, to Twitter. This token is unique for every API-user and identifies you to Twitter. Twitter can then validate that you are indeed allowed to make this request. An access token looks vaguely like this: "1163470362377224163-jagGWNalfOtV78aRwCauSMl8Ln6blc"
+
+Please follow the instructions from Twitter on how to get access to the API: https://developer.twitter.com/en/docs/twitter-api/getting-started/getting-access-to-the-twitter-api
+
+The basic steps are:
+
+1. Sign up for Twitter https://twitter.com/
+2. Sign up for a developer account https://developer.twitter.com/en
+3. Create an "App" here: https://developer.twitter.com/en/portal/projects-and-apps
+4. Generate acces-token and bearer-token in the "keys" section of your Twitter project dashboard https://developer.twitter.com/en/portal/dashboard (create a project and then click on the key-symbol)
+
+Store the tokens in a text file. You can store it in your code if you do not redistribute the code.
+You can invalidate and regenerate the tokens, if you loose them.
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#install.packages("httr")
+#install.packages("jsonlite")
+library(httr)
+library(jsonlite)
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+library(utils)
+
+#credentials = {}
+#credentials['CONSUMER_KEY'] = "Ij7CJznMpBFJ6wJfwAuUbElba"
+#credentials['CONSUMER_SECRET'] = "MfoAuwIhdkyMKpEJzdgtXhn0EH5VDLEjkU8Rxh5PjIShd0PH78"
+#credentials['ACCESS_SECRET'] = "f0T567VEtvkw4ODVDL9xoiHXsQ6st27VrheSEK9JNxST3"
+
+
+access_token = "1163381962377224193-jasGWNalfAtV58aRwCazSMl8Lm6xlc"
+bearer_token = "AAAAAAAAAAAAAAAAAAAAAJkCCQEAAAAAyY09uv5kiLlDGYHMn2ADdWWXVNY%3DMQAhsYccKDpxmq2VCFmtMxcnFMOiSBqfsMkXRkxD5m7IbIkqwK"
+
+Sys.setenv(BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAJkCCQEAAAAAyY09uv5kiLlDGYHMn2ADdWWXVNY%3DMQAhsYccKDpxmq2VCFmtMxcnFMOiSBqfsMkXRkxD5m7IbIkqwK")
+
+bearer_token <- Sys.getenv("$BEARER_TOKEN")
+      
+    
+
+```
+
+
+
+```{R}
+# load the bearer-token into a variable:
+bearer_token <- Sys.getenv("$BEARER_TOKEN")
+# create headers for your request:
+headers <- c(`Authorization` = sprintf('Bearer %s', bearer_token))
+    
+```
+
+Headers can be send with every request to the server. A http-header can contain some variables.
+Twitter expects a key value pair like `"Authorization":{"Bearer":"...your bearer token..."}` to authenticate your query.
+Twitter will check whether the account with that token has access to the API with this token.
+
+
+
+Now you are ready to format your URL with the Twitter handle, also known as account, you are looking to get more information about. 
+
+```{R}
+username <- "ezagheni"
+url1 <-  sprintf('https://api.twitter.com/2/users/by?usernames=%s', username) # sprintf is a way to concatenate strings. `%s` will be replaced by the content of `handle`
+```
+
+At this point, use the httr package to make a GET request to the URL you just created, pass in our authentication credential via the header, and pass in the parameters you defined. You can save the response as a text object in the variable obj and print this out to view the result of the request you made.
+
+```{R}
+response <- httr::GET(url = url1, httr::add_headers(.headers = headers), query = params)
+obj <- httr::content(response, as = "text")
+print(obj)
+```
+
+We can use the fromJSON function of the package jsonlite to convert the text with the json-response into something more readable:
+```{R}
+fromJSON(obj)
+```
+
+Well, let's try to get more information from this user. By default, only the above information is returned. We can look into the documentation on how to get more information: https://developer.twitter.com/en/docs/twitter-api/users/lookup/quick-start/user-lookup
+
+```{R}
+
+username <- "ezagheni"
+url1 <-  sprintf('https://api.twitter.com/2/users/by?usernames=ezagheni&user.fields=created_at&expansions=pinned_tweet_id&tweet.fields=author_id,created_at', username)       
+
+
+response <- httr::GET(url = url1, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(obj)
+    
+fromJSON(obj)
+```
+
+Wow, since 2011! Let's use his userID to look up 
+
+```{R}
+
+obj <- httr::content(response, as = "parsed")
+userid <- obj$data[[1]]$id
+url1 <-  sprintf('https://api.twitter.com/2/users/%s/followers?user.fields=created_at&expansions=pinned_tweet_id&tweet.fields=created_at', userid)       
+
+
+response <- httr::GET(url = url1, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(obj)
+    
+fromJSON(obj)
+    
+```
+
+Cool, 100 followers with their usernames and created_at dates. But why only 100?
+The answer is divided into pages and to get the next 100 pages, we have to use the nex_page_token in the answer:
+
+To pull the next page of results, you will pull the value of the next_token field, and add it to the request as the value to an additional pagination_token parameter.
+
+
+```{R}
+
+obj <- httr::content(response, as = "parsed")
+next_token <- obj$meta$next_token # get the token for the next page
+
+# and then do the same thing as above, but with a next_token added:
+url1 <-  sprintf('https://api.twitter.com/2/users/%s/followers?user.fields=created_at&expansions=pinned_tweet_id&tweet.fields=created_at&next_token=%s', userid,next_token)       
+response <- httr::GET(url = url1, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(obj)
+```
+Error! The error messages can sometimes be very helpful. The name of the parameter should be pagination_token and not next_token:
+
+
+```{R}
+
+obj <- httr::content(response, as = "parsed")
+next_token <- obj$meta$next_token # get the token for the next page
+
+# and then do the same thing as above, but with a next_token added:
+url1 <-  sprintf('https://api.twitter.com/2/users/%s/followers?user.fields=created_at&expansions=pinned_tweet_id&tweet.fields=created_at&pagination_token=%s', userid,next_token)       
+response <- httr::GET(url = url1, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(obj)
+    
+fromJSON(obj)
+
+
+```
+Ok, now we are seeing the next 100 followers.
+
+**Exercise 3.1:** Look up how to retrieve 800 followers at once, not 100
+
+
+```{R}
+```
+
+## Getting Tweet counts from the last 7 days
+
+Documentation for getting tweet counts can be found here: https://developer.twitter.com/en/docs/twitter-api/tweets/counts/introduction
+
+The normal access-level can only retrieve Data for the last 7 days.
+The Academic Access level can retrieve counts from the full history of Twitter.
+
+
+The following example works with the low-access API:
+
+```{R}
+
+url_handle <- "https://api.twitter.com/2/tweets/counts/recent?query=ukraine&granularity=day"
+
+response <- httr::GET(url = url_handle, httr::add_headers(.headers = headers))
+response
+obj <- httr::content(response, as = "text")
+print(obj)
+print(fromJSON(obj))
+
+```
+
+```{R}
+
+dfresponse = fromJSON(obj)[[1]]
+dfresponse$start = as.Date(dfresponse$start)
+ggplot(dfresponse, aes(x=start, y=tweet_count)) +
+  geom_point()
+
+```
+A query can be be crafted to target very specific stuff only. The simplest query, which we used above, only looks for one specific keyword `query=ukraine`.
+
+Another simple query would be look for a specific username: `query=from:BarackObama`
+
+
+```{R}
+
+url_handle <- "https://api.twitter.com/2/tweets/counts/recent?query=from:POTUS&granularity=day"
+response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(fromJSON(obj))
+
+```
+If your query contains special characters (like a space or a colon), you have to URL-encode them. This can be done with the function `URLencode` from the `Utils`-package:
+
+```{R}
+query = URLencode("has:geo explosion place_country:UA")
+url_handle <- sprintf("https://api.twitter.com/2/tweets/counts/recent?query=%s&granularity=day",query)
+print(url_handle)
+response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(fromJSON(obj))
+
+```
+
+```{R}
+query = URLencode("computational demography") # or is "digital demography" more common?
+url_handle <- sprintf("https://api.twitter.com/2/tweets/counts/recent?query=%s&granularity=day",query)
+print(url_handle)
+response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(fromJSON(obj))
+
+```
+
+```{R}
+query = URLencode('"computational demography"') # or is "digital demography" more common?
+url_handle <- sprintf("https://api.twitter.com/2/tweets/counts/recent?query=%s&granularity=day",query)
+print(url_handle)
+response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(fromJSON(obj))
+
+```
+```{R}
+query = URLencode('place:"Barcelona" lang:de') # or is "digital demography" more common?
+url_handle <- sprintf("https://api.twitter.com/2/tweets/counts/recent?query=%s&granularity=day",query)
+print(url_handle)
+response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(fromJSON(obj))
+
+```
+
+
+You can find much more information about building queries here: https://developer.twitter.com/en/docs/twitter-api/tweets/counts/integrate/build-a-query
+
+
+**Exercise 3.2:**
+How many tweets are there in the last seven days:
+
+* from the Ukraine, with images
+* from Barcelona with the keyword "rain"
+* with a link to demogr.mpg.de or your institutes website?
+* Are there more English or more spanisch tweets with a place:"Barcelona"? 
+
+
+#### Full archive search
+
+This is only possible with the academic-access as you can read here:
+https://developer.twitter.com/en/docs/twitter-api/tweets/counts/api-reference/get-tweets-counts-all
+the differences to the "recent-counts" API are not big:
+* replace `recent` with `all`
+* This will give us the last 30 days of a query by default
+* optionally we can define an end_time and start_time to request a specific time frame
+* if there are too many entries (days/hours/minutes), the answer will be paged
+
+```{R}
+query = URLencode('war ukraine') # or is "digital demography" more common?
+url_handle <- sprintf("https://api.twitter.com/2/tweets/counts/all?query=%s&granularity=day",query)
+print(url_handle)
+response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(fromJSON(obj))
+dfresponse = fromJSON(obj)[[1]]
+dfresponse$start = as.Date(dfresponse$start)
+ggplot(dfresponse, aes(x=start, y=tweet_count)) +
+  geom_point()
+
+```
+
+## Retrieving Tweets
+
+### By Search
+https://developer.twitter.com/en/docs/twitter-api/tweets/search/quick-start/recent-search
+
+The query can be the same as in the tweet-counts-API. But we can add some parameters that tell the API
+what exactly it should send back to us. Twitter not only saves the 280 characters of a tweet,
+but a lot of other data which is not included by default.
+
+
+```{R}
+query = URLencode('computational demography') # or is "digital demography" more common?
+url_handle <- sprintf("https://api.twitter.com/2/tweets/search/recent?query=%s&tweet.fields=created_at&expansions=author_id,geo.place_id&user.fields=created_at",query)
+print(url_handle)
+response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(fromJSON(obj))
+dfresponse = fromJSON(obj)[[1]]
+dfresponse
+```
+
+```{R}
+```
+
+```{R}
+```
+
+Find an interesting API-Endpoint here:
+https://developer.twitter.com/en/docs/api-reference-index
+
+```{R}
+```
+
+

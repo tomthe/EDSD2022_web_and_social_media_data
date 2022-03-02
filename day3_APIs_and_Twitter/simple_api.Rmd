@@ -1,0 +1,89 @@
+---
+title: "Simple APIs"
+author: "Tom Theile"
+date: "1 3 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#install.packages("httr")
+#install.packages("jsonlite")
+library(httr)
+library(jsonlite)
+library(lubridate)
+```
+https://openweathermap.org/current
+
+
+```{R}
+
+api_key <- "17c05109bd812076cdd25e9bbeffedb7"
+url1 = paste0("https://api.openweathermap.org/data/2.5/weather?q=Barcelona&appid=",api_key)
+res <- GET(url1)
+res
+content(res)
+
+``` 
+oh no! everything is in non-metric-units! We have to look at the Documentation again:
+https://openweathermap.org/current
+
+We have to add `units=metric` to the query. We also have to add a `&` between query-parameters
+
+
+```{R}
+city <- "Barcelona"
+url2 = paste0("https://api.openweathermap.org/data/2.5/weather?q=",city,"&appid=",api_key,"&units=metric")
+print(url2)
+res <- GET(url2)
+res
+result <- content(res)
+result
+``` 
+
+cool!
+If you are bored, you could now build your own weather-forecast-display...
+You need to extract the variables of interest and then you can use them in whatever way you want:
+
+```{R}
+tempcurrent <- result$main$temp
+windcurrent <- result$wind$speed
+
+print(paste0("The temperature in ",city," is ",tempcurrent," C right now. The wind blows with hefty ", windcurrent," meter per seconds!"))
+
+```
+
+
+### Let's create a plot of temperatures over latitude:
+
+
+```{R}
+
+arr_temperatures = rep(0,9)
+by=10
+
+for (idegree in seq(0, 90, by=by)) {
+  print(idegree)
+  lat=idegree
+  lon = 2
+  url2 = paste0("https://api.openweathermap.org/data/2.5/weather?lat=",lat,"&lon=",lon,"&appid=",api_key,"&units=metric")
+  res <- GET(url2)
+  print(res)
+  result <- content(res)
+  print(result$main$temp)
+  arr_temperatures[idegree/by+1] <- result$main$temp
+  
+}
+print(arr_temperatures)
+
+```
+
+```{R}
+library(ggplot2)
+
+dftemps <- data.frame(lat=seq(0, 90, by=by),temps=arr_temperatures)
+ggplot(dftemps, aes(x=lat, y=temps)) +
+  geom_line()
+```
+
+

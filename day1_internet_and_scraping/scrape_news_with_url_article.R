@@ -62,7 +62,7 @@ scrape_headlines = function(news_url, news_selector, news_name, article_selector
   #news_page
   
   # save the page to a file:
-  filename= paste0("U:/dev/edsd/scraping/",gsub(":", "_", as.character(Sys.time())),"_",news_name,".RDS")
+  filename= paste0("D:/dev/r/EDSD22_web_and_social_media_data/day1_internet_and_scraping/data/",gsub(":", "_", as.character(Sys.time())),"_",news_name,".RDS")
   print(paste0("just scraped: ", filename, news_name))
   saveRDS(news_page, filename)
   
@@ -80,8 +80,9 @@ scrape_headlines = function(news_url, news_selector, news_name, article_selector
     filter(!is.na(links)) %>%
     group_by(headline)
 
+  
   # uncomment this, if you want to also scrape every article!
-  # df_all_articles = mapply(read_article,dflinks2$links, article_selector)
+  df_all_articles = mapply(read_article,dflinks2$links, article_selector)
 
   return(dflinks2)
 }
@@ -92,7 +93,7 @@ all_headlines = list()
 
 # execute scraping and append the results to all_headlines:
 for(i in 1:length(news_urls)){
-  #i=2
+
   tempheadlines = scrape_headlines(news_urls[i], news_selectors[i], news_names[i])
   all_headlines[i] = list(tempheadlines)
 }
@@ -104,6 +105,7 @@ for(i in 2:length(news_urls)){
 }
 
 # save dataframe to file:
-filename= paste0("U:/dev/edsd/scraping/",gsub(":", "_", as.character(Sys.time())),"_all_headlines_of_one_scrape.RDS")
+filename= paste0("D:/dev/r/EDSD22_web_and_social_media_data/day1_internet_and_scraping/data/",gsub(":", "_", as.character(Sys.time())),"_all_headlines_of_one_scrape.RDS")
 print(paste0("finished. now save all: ", filename))
 saveRDS(df_all_headlines, filename)
+

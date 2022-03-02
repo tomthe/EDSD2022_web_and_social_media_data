@@ -99,7 +99,7 @@ if(!require(syuzhet)){
 
 dfsmall <-sample_n(df_all_headlines,8)
 
-sentiments <- get_nrc_sentiment(dfsmall$headlines)
+sentiments <- get_nrc_sentiment(df_all_headlines$headlines)
 
 knitr::kable(cbind(dfsmall,sentiments), caption = "8 random headlines", floating.environment="sidewaystable")
 

@@ -72,15 +72,26 @@ mean_sentiments = df_headlines_sentiments %>%
     meanneg = mean(negative),
     meanjoy = mean(joy),
     meandisgust = mean(disgust),
-    meananger = mean(anger),
+    meananger = mean(anger)
   )
 mean_sentiments
+```
+
+```{R}
+
 
 
 mean_sentiments_long <- mean_sentiments %>%
-  pivot_longer(!news_name,names_to = "meanwhat", values_to = "mvalue")
+  pivot_longer(news_name,names_to = "meanwhat", values_to = "mvalue")
 mean_sentiments_long
 ```
+
+```{R}
+mean_sentiments_long <- mean_sentiments %>%
+  gather(meanwhat, mvalue, -c(news_name))
+mean_sentiments_long
+```
+
 
 ```{R}
 
@@ -97,7 +108,7 @@ ggplot(data = mean_sentiments_long, mapping = aes(x = news_name, y = mvalue,colo
 * Then plot
  * occurrences over time, colored by the news_name
  * compare the sources
-* optional:
+* choose one of these:
  * make an interesting wordcloud
  * fraction of occurrences of some words over time
  * use the sentiment data: did the sentiments change over time? Did fear increase? What if you filter by a word and then look at the sentiments?
