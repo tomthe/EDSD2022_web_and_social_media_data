@@ -22,7 +22,9 @@ api_key <- "17c05109bd812076cdd25e9bbeffedb7"
 url1 = paste0("https://api.openweathermap.org/data/2.5/weather?q=Barcelona&appid=",api_key)
 res <- GET(url1)
 res
-content(res)
+rescontent <-content(res)
+
+rescontent$main$temp
 
 ``` 
 oh no! everything is in non-metric-units! We have to look at the Documentation again:
@@ -32,13 +34,15 @@ We have to add `units=metric` to the query. We also have to add a `&` between qu
 
 
 ```{R}
-city <- "Barcelona"
+city <- "London"
 url2 = paste0("https://api.openweathermap.org/data/2.5/weather?q=",city,"&appid=",api_key,"&units=metric")
 print(url2)
 res <- GET(url2)
 res
 result <- content(res)
 result
+
+result$main$temp
 ``` 
 
 cool!

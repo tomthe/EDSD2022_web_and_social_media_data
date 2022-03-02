@@ -47,22 +47,17 @@ library(utils)
 access_token = "1163381962377224193-jasGWNalfAtV58aRwCazSMl8Lm6xlc"
 bearer_token = "AAAAAAAAAAAAAAAAAAAAAJkCCQEAAAAAyY09uv5kiLlDGYHMn2ADdWWXVNY%3DMQAhsYccKDpxmq2VCFmtMxcnFMOiSBqfsMkXRkxD5m7IbIkqwK"
 
-Sys.setenv(BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAJkCCQEAAAAAyY09uv5kiLlDGYHMn2ADdWWXVNY%3DMQAhsYccKDpxmq2VCFmtMxcnFMOiSBqfsMkXRkxD5m7IbIkqwK")
-
-bearer_token <- Sys.getenv("$BEARER_TOKEN")
-      
-    
 
 ```
 
 
 
 ```{R}
-# load the bearer-token into a variable:
-bearer_token <- Sys.getenv("$BEARER_TOKEN")
+
+
 # create headers for your request:
 headers <- c(`Authorization` = sprintf('Bearer %s', bearer_token))
-    
+headers    
 ```
 
 Headers can be send with every request to the server. A http-header can contain some variables.
@@ -96,7 +91,7 @@ Well, let's try to get more information from this user. By default, only the abo
 ```{R}
 
 username <- "ezagheni"
-url1 <-  sprintf('https://api.twitter.com/2/users/by?usernames=ezagheni&user.fields=created_at&expansions=pinned_tweet_id&tweet.fields=author_id,created_at', username)       
+url1 <-  sprintf('https://api.twitter.com/2/users/by?usernames=%s&user.fields=created_at&expansions=pinned_tweet_id&tweet.fields=author_id,created_at', username)       
 
 
 response <- httr::GET(url = url1, httr::add_headers(.headers = headers))
@@ -109,7 +104,7 @@ fromJSON(obj)
 Wow, since 2011! Let's use his userID to look up 
 
 ```{R}
-
+  
 obj <- httr::content(response, as = "parsed")
 userid <- obj$data[[1]]$id
 url1 <-  sprintf('https://api.twitter.com/2/users/%s/followers?user.fields=created_at&expansions=pinned_tweet_id&tweet.fields=created_at', userid)       
@@ -121,6 +116,7 @@ print(obj)
     
 fromJSON(obj)
     
+print("no")
 ```
 
 Cool, 100 followers with their usernames and created_at dates. But why only 100?
@@ -135,21 +131,7 @@ obj <- httr::content(response, as = "parsed")
 next_token <- obj$meta$next_token # get the token for the next page
 
 # and then do the same thing as above, but with a next_token added:
-url1 <-  sprintf('https://api.twitter.com/2/users/%s/followers?user.fields=created_at&expansions=pinned_tweet_id&tweet.fields=created_at&next_token=%s', userid,next_token)       
-response <- httr::GET(url = url1, httr::add_headers(.headers = headers))
-obj <- httr::content(response, as = "text")
-print(obj)
-```
-Error! The error messages can sometimes be very helpful. The name of the parameter should be pagination_token and not next_token:
-
-
-```{R}
-
-obj <- httr::content(response, as = "parsed")
-next_token <- obj$meta$next_token # get the token for the next page
-
-# and then do the same thing as above, but with a next_token added:
-url1 <-  sprintf('https://api.twitter.com/2/users/%s/followers?user.fields=created_at&expansions=pinned_tweet_id&tweet.fields=created_at&pagination_token=%s', userid,next_token)       
+url1 <-  sprintf('https://api.twitter.com/2/users/%s/followers?user.fields=created_at&expansions=pinned_tweet_id&tweet.fields=created_at&pagination_token=%s&max_results=800', userid,next_token)       
 response <- httr::GET(url = url1, httr::add_headers(.headers = headers))
 obj <- httr::content(response, as = "text")
 print(obj)
@@ -178,7 +160,7 @@ The following example works with the low-access API:
 
 ```{R}
 
-url_handle <- "https://api.twitter.com/2/tweets/counts/recent?query=ukraine&granularity=day"
+url_handle <- "https://api.twitter.com/2/tweets/counts/recent?query=Ukraine&granularity=day"
 
 response <- httr::GET(url = url_handle, httr::add_headers(.headers = headers))
 response
@@ -204,7 +186,7 @@ Another simple query would be look for a specific username: `query=from:BarackOb
 ```{R}
 
 url_handle <- "https://api.twitter.com/2/tweets/counts/recent?query=from:POTUS&granularity=day"
-response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
+response <-  GET(url = url_handle, httr::add_headers(.headers = headers))
 obj <- httr::content(response, as = "text")
 print(fromJSON(obj))
 
@@ -222,16 +204,6 @@ print(fromJSON(obj))
 ```
 
 ```{R}
-query = URLencode("computational demography") # or is "digital demography" more common?
-url_handle <- sprintf("https://api.twitter.com/2/tweets/counts/recent?query=%s&granularity=day",query)
-print(url_handle)
-response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
-obj <- httr::content(response, as = "text")
-print(fromJSON(obj))
-
-```
-
-```{R}
 query = URLencode('"computational demography"') # or is "digital demography" more common?
 url_handle <- sprintf("https://api.twitter.com/2/tweets/counts/recent?query=%s&granularity=day",query)
 print(url_handle)
@@ -240,8 +212,10 @@ obj <- httr::content(response, as = "text")
 print(fromJSON(obj))
 
 ```
+
+
 ```{R}
-query = URLencode('place:"Barcelona" lang:de') # or is "digital demography" more common?
+query = URLencode('place:"Barcelona" lang:de') # Tweets 
 url_handle <- sprintf("https://api.twitter.com/2/tweets/counts/recent?query=%s&granularity=day",query)
 print(url_handle)
 response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
@@ -298,14 +272,21 @@ but a lot of other data which is not included by default.
 
 
 ```{R}
-query = URLencode('computational demography') # or is "digital demography" more common?
-url_handle <- sprintf("https://api.twitter.com/2/tweets/search/recent?query=%s&tweet.fields=created_at&expansions=author_id,geo.place_id&user.fields=created_at",query)
+query = URLencode('"demogr.mpg.de"') # or is "digital demography" more common?
+fulltext = URLencode("tweet_mode='extended'")
+url_handle <- sprintf("https://api.twitter.com/2/tweets/search/recent?query=%s&%s&tweet.fields=created_at&expansions=author_id,geo.place_id&user.fields=created_at",query,fulltext)
 print(url_handle)
 response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
 obj <- httr::content(response, as = "text")
+obj
 print(fromJSON(obj))
 dfresponse = fromJSON(obj)[[1]]
 dfresponse
+jresponse <-fromJSON(obj)
+
+jresponse$data[1]$text
+
+
 ```
 **Exercise 3.3:** Play around with the query and search for more interesting tweets. Use the geo-tags, exclude a word by adding a minus sign: -demography
 
