@@ -81,7 +81,7 @@ url1 <-  sprintf('https://api.twitter.com/2/users/by?usernames=%s', username) # 
 At this point, use the httr package to make a GET request to the URL you just created, pass in our authentication credential via the header, and pass in the parameters you defined. You can save the response as a text object in the variable obj and print this out to view the result of the request you made.
 
 ```{R}
-response <- httr::GET(url = url1, httr::add_headers(.headers = headers), query = params)
+response <- httr::GET(url = url1, httr::add_headers(.headers = headers))
 obj <- httr::content(response, as = "text")
 print(obj)
 ```
@@ -307,9 +307,7 @@ print(fromJSON(obj))
 dfresponse = fromJSON(obj)[[1]]
 dfresponse
 ```
-
-```{R}
-```
+**Exercise 3.3:** Play around with the query and search for more interesting tweets. Use the geo-tags, exclude a word by adding a minus sign: -demography
 
 ```{R}
 ```
