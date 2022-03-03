@@ -30,7 +30,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #### Use R and an API to fetch a joke and print the joke.
 
-Alternatively: Search for any API and fetch something of similar importance.
+Alternatively: Search for a public API and fetch something of similar importance.
 
 Show the code and the result. 
 
@@ -64,23 +64,11 @@ You can leave out the parts that are always the same or not necessary.
 ```
 
 ```
-##### All female facebook users from France who formerly lived in Germany.
 
-```
+#### In the course we created a plot to compare Facebook data against World bank data. Which is more accurate? What is the advantage of using Facebook Data?
 
-```
+Please write 3...6 sentences
 
-##### All male facebook users from Barcelona, 50 to 55 years old, who are in a long distance relationship.
-
-```
-
-```
-
-Please comment: Why might this be a not so useful targeting spec?
-
-#### How many Favebook users ...?
-
-Use the web interface to get this number. Make it something interesting which results in a number above 1000
 
 #### Create and Download a list of all Universities worldwide.
 
