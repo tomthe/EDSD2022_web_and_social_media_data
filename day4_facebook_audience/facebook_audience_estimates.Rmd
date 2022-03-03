@@ -103,7 +103,7 @@ Steps:
 * Look at the request. We have to recreate the whole thing to get an answer from Facebook.
 * right click on the request --> copy as cURL(POSIX)
 * Paste the clipboard into this page: https://curlconverter.com/#r
-* copy the code for R into a new R-script
+* copy the code for R into a new R-script, or replace the next cell.
 
 
 I had to manually edit the request a bit, because R was giving me errors:
@@ -173,7 +173,7 @@ data = list(
   `xref` = 'f16a0811580a282'
 )
 
-res <- httr::POST(url = 'https://graph.facebook.com/v12.0/act_660797563979760/delivery_estimate', httr::add_headers(.headers=headers), query = params, body = data, encode = "form")
+res <- httr::POSTer(url = 'https://graph.facebook.com/v12.0/act_660797563979760/delivery_estimate', httr::add_headers(.headers=headers), query = params, body = data, encode = "form")
 
 res
 
@@ -197,7 +197,7 @@ This should give you the same Monthly Active Users as in the the number from the
 
 ### Change the targeting_spec to get a different result
 
-The targeting spec defines our audience. Changes in the targeting spec will lead to changes in the audience estimates. Go to the previous long code-chung and change the targeting-spec. You could change the age or delete a requirement. But be careful that the targeting-spec stays valid json (parentheses must be closed, etc.).
+The targeting spec defines our audience. Changes in the targeting spec will lead to changes in the audience estimates. Go to the previous long code chunk and change the targeting-spec. You could change the age or delete a requirement. But be careful that the targeting-spec stays valid json (parentheses must be closed, etc.).
 Now you should get a different result.
 
 This is an example targeting_spec:
@@ -206,7 +206,7 @@ This is an example targeting_spec:
 `targeting_spec` = '{"geo_locations":{"countries":["ES"],"location_types":["home"]},"age_min":18,"age_max":65,"publisher_platforms":["facebook","instagram","audience_network","messenger"],"facebook_positions":["feed","instant_article","instream_video","right_hand_column","video_feeds","marketplace","story","facebook_reels_overlay","search","groups_feed"],"instagram_positions":["stream","story","explore","reels","shop"],"messenger_positions":["messenger_home","story"],"device_platforms":["mobile","desktop"],"audience_network_positions":["classic","rewarded_video"],"oculus_positions":[],"excluded_publisher_list_ids":[],"user_device":[],"excluded_user_device":[],"user_os":[],"wireless_carrier":[],"targeting_optimization":"none","exclusions":{"behaviors":[{"id":"6086568164383","name":"Marketing API developers (last 90 days)"},{"id":"6063136545383","name":"Android: 360 degree media supported"}]},"flexible_spec":[{"life_events":[{"id":"6003053984972","name":"Long-distance relationship"}]}],"brand_safety_content_filter_levels":["FACEBOOK_STANDARD","AN_STANDARD"],"excluded_brand_safety_content_types":[]}'
 ```
 
-if we format it:
+if we format it, it looks like this:
 
 ```JSON
 `targeting_spec` = `{
@@ -391,7 +391,7 @@ print(create_targeting_spec(countries=c("ES"),only_expats = TRUE))
 tarspec = create_targeting_spec(countries=c("ES"))
 ```
 
-Now let's create a new request and replace the targeting spec with our self-generated targeting-spec and see whether Facebook gives us a reasonable response. Copy your own code from above here again and then edit the line with the targeting-spec. Remove the string and insert the function
+Now let's create a new request and replace the targeting spec with our self-generated targeting-spec and see whether Facebook gives us a reasonable response. Copy your own code from above here again and then edit the line with the targeting-spec. Remove the string of the targeting-spec and insert the function.
 
 ```{R}
 
@@ -544,8 +544,6 @@ version="v13.0"
     
 Credentials=paste0('https://graph.facebook.com/',version,'/act_',fappid,'/delivery_estimate?access_token=',ftoken,'&include_headers=false&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1')
 
-
-
 Age1=25
 Age2=55
 
@@ -686,161 +684,9 @@ names(dfmm) = c("country","agemin","agemax","tarspec","with_expats","mau")
 write.csv(dfmm,file="facebook_audience_estimates_1.csv")
 ```
 
-
-
-```{R}
-
-agegroups = list(c(18,65),c(18,39))
-countries = c('AL', 'AD', 'AM', 'AT', 'BY', 'BE', 'BA', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FO', 'FI', 'FR', 'GB', 'GE', 'GI', 'GR', 'HU', 'HR', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MC', 'MK', 'MT', 'NO', 'NL', 'PL', 'PT', 'RO', 'RS', 'RU', 'SE', 'SI', 'SK', 'SM', 'TR', 'UA')
-#countries = c('ES', 'DE')
-i = 0
-
-#create an empty data.frame:
-dfresults = data.frame(age_min = numeric(), age_max = numeric(), countrycode = character(), mau=numeric(), dau= numeric(),stringsAsFactors = FALSE)
-
-
-for (agegroup in agegroups) {
-  print("-----")
-  print(agegroup)
-  for (country in countries) {
-    i <- i + 1
-    print(country)
-    print(agegroup[1])
-    print(agegroup[2])
-    tarspec <- create_targeting_spec(age_min = agegroup[1],age_max = agegroup[2], countries = country)
-    
-      data2 = list(
-        `__activeScenarioIDs` = '["f1d72463db28672_1645617531133","f21374688903106_1645617531135"]',
-        `__activeScenarios` = '["am:edit_targeting:audience_estimates","save_changes"]',
-        `_app` = 'ADS_MANAGER',
-        `_reqName` = 'adaccount/delivery_estimate',
-        `_reqSrc` = 'AdsDeliveryEstimateDataLoader',
-        `_sessionID` = '7c9a88b4d5cc6fb7',
-        `attribution_spec` = '[{"event_type":"CLICK_THROUGH","window_days":1}]',
-        `bid_strategy` = 'LOWEST_COST_WITHOUT_CAP',
-        `budget_guardrail` = 'false',
-        `currency` = 'EUR',
-        `include_headers` = 'false',
-        `is_cbo_enabled` = 'false',
-        `locale` = 'en_US',
-        `method` = 'get',
-        `optimization_goal` = 'LINK_CLICKS',
-        `prediction_duration` = '0',
-        `pretty` = '0',
-        `qpl_active_flow_ids` = '270213183',
-        `qpl_active_flow_instance_ids` = '270213183_b7f2a4eaf93b38d76',
-        `send_long_term_prediction_shadow_request` = 'true',
-        `skip_bid_suggestion` = 'true',
-        `suppress_http_code` = '1',
-        `targeting_as_signal` = '0',
-        `targeting_spec` = create_targeting_spec(countries=c("FR")),
-        `xref` = 'f16a0811580a282'
-      )
-      
-      res <- httr::POST(url = 'https://graph.facebook.com/v12.0/act_660797563979760/delivery_estimate',  httr::add_headers(.headers=headers), query = params, body = data2, encode = "form")
-      
-      print(res)
-      
-      reply <-content(res,as="parsed")
-      print(reply)
-      print(paste("Mau (Monthly active users)",reply[["data"]][[1]][["estimate_mau"]]))
-      print(paste("Mau (Monthly active users, lower bound)",reply[["data"]][[1]][["estimate_mau_lower_bound"]]))
-      print(paste("Mau (Monthly active users, upper bound)",reply[["data"]][[1]][["estimate_mau_upper_bound"]]))
-      print(paste("Dau (Daily active users)",reply[["data"]][[1]][["estimate_dau"]]))
-      
-      mau <- reply[["data"]][[1]][["estimate_mau_upper_bound"]]
-      dau <-reply[["data"]][[1]][["estimate_dau"]]
-      
-      row <- c(agegroup[1],agegroup[2],country,dau,mau)
-      dfresults[i,] <- row
-  }
-}
-print(i)
-
-
-```
-
-
-
-
-
-
-
-
-
-
-
-````{R}
-# declaring an empty data frame
-data_frame = data.frame(
-  colss1 = numeric(), col2 = character(),coolli = numeric(),stringsAsFactors = FALSE)
-print ("Original dataframe")
-print (data_frame)
-````
-
-
+### Plot the results versus World Bank data
 
 ```{R}
-require(httr)
-
-headers = c(
-  `User-Agent` = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0',
-  `Accept` = '*/*',
-  `Accept-Language` = 'de,en-US;q=0.7,en;q=0.3',
-  `Accept-Encoding` = 'gzip, deflate',
-  `Referer` = 'https://www.facebook.com/',
-  `Content-type` = 'application/x-www-form-urlencoded',
-  `Origin` = 'https://www.facebook.com',
-  `Connection` = 'keep-alive',
-  `Sec-Fetch-Dest` = 'empty',
-  `Sec-Fetch-Mode` = 'cors',
-  `Sec-Fetch-Site` = 'same-site',
-  `Pragma` = 'no-cache',
-  `Cache-Control` = 'no-cache',
-  `TE` = 'trailers'
-)
-
-params = list(
-  `access_token` = 'EAABsbCS1iHgBAA8fFlYhidCpWWL2uxz8aZAhEBMU4yTEGv4Lc1ZCubdzWL9xuDYbRdwE0R8aPCoHJs8TJWGuBeF39jZCAJDLYs1GV5ZCRm8H4WswJWHSykGyv1jqYcpeCZB0a7ZBZBMqqddazX23h3dpggwZCTerKgLQlKCf3yUCpQZDZD',
-  `__cppo` = '1',
-  `__activeScenarioIDs` = '["f2ebf3be883f70e_1646264233219","f22cb55ee0d94e8_1646264233221"]',
-  `__activeScenarios` = '["am:edit_targeting:audience_estimates","save_changes"]',
-  `_app` = 'ADS_MANAGER',
-  `_reqName` = 'adaccount/delivery_estimate',
-  `_reqSrc` = 'AdsDeliveryEstimateDataLoader',
-  `_sessionID` = '4f96097caa53a810',
-  `attribution_spec` = '[{"event_type":"CLICK_THROUGH","window_days":1}]',
-  `bid_strategy` = 'LOWEST_COST_WITHOUT_CAP',
-  `budget_guardrail` = 'false',
-  `currency` = 'EUR',
-  `include_headers` = 'false',
-  `is_cbo_enabled` = 'false',
-  `locale` = 'en_US',
-  `method` = 'get',
-  `optimization_goal` = 'LINK_CLICKS',
-  `prediction_duration` = '0',
-  `pretty` = '0',
-  `qpl_active_flow_ids` = '270213183',
-  `qpl_active_flow_instance_ids` = '270213183_10f159f5e1f7de592',
-  `send_long_term_prediction_shadow_request` = 'true',
-  `skip_bid_suggestion` = 'true',
-  `suppress_http_code` = '1',
-  `targeting_as_signal` = '0',
-  `targeting_spec` = '{"geo_locations":{"countries":["ES"],"location_types":["home"]},"age_min":18,"age_max":65,"publisher_platforms":["facebook","instagram","audience_network","messenger"],"facebook_positions":["feed","instant_article","instream_video","right_hand_column","video_feeds","marketplace","story","facebook_reels_overlay","search","groups_feed"],"instagram_positions":["stream","story","explore","reels","shop"],"messenger_positions":["messenger_home","story"],"device_platforms":["mobile","desktop"],"audience_network_positions":["classic","rewarded_video"],"oculus_positions":[],"excluded_publisher_list_ids":[],"user_device":[],"excluded_user_device":[],"user_os":[],"wireless_carrier":[],"targeting_optimization":"none","flexible_spec":[{"behaviors":[{"id":"6019367052983","name":"Lived in Germany (Formerly Expats - Germany)"}]}],"brand_safety_content_filter_levels":["FACEBOOK_STANDARD","AN_STANDARD"],"excluded_brand_safety_content_types":[]}',
-  `xref` = 'f1fc69c10eafbe2'
-)
-
-res <- httr::GET(url = 'https://graph.facebook.com/v12.0/act_660797563979760/delivery_estimate', httr::add_headers(.headers=headers), query = params)
-
-#NB. Original query string below. It seems impossible to parse and
-#reproduce query strings 100% accurately so the one below is given
-#in case the reproduced version is not "correct".
-# res <- httr::GET(url = 'https://graph.facebook.com/v12.0/act_660797563979760/delivery_estimate?access_token=EAABsbCS1iHgBAA8fFlYhidCpWWL2uxz8aZAhEBMU4yTEGv4Lc1ZCubdzWL9xuDYbRdwE0R8aPCoHJs8TJWGuBeF39jZCAJDLYs1GV5ZCRm8H4WswJWHSykGyv1jqYcpeCZB0a7ZBZBMqqddazX23h3dpggwZCTerKgLQlKCf3yUCpQZDZD&__cppo=1&__activeScenarioIDs=%5B%22f2ebf3be883f70e_1646264233219%22%2C%22f22cb55ee0d94e8_1646264233221%22%5D&__activeScenarios=%5B%22am%3Aedit_targeting%3Aaudience_estimates%22%2C%22save_changes%22%5D&_app=ADS_MANAGER&_reqName=adaccount%2Fdelivery_estimate&_reqSrc=AdsDeliveryEstimateDataLoader&_sessionID=4f96097caa53a810&attribution_spec=%5B%7B%22event_type%22%3A%22CLICK_THROUGH%22%2C%22window_days%22%3A1%7D%5D&bid_strategy=LOWEST_COST_WITHOUT_CAP&budget_guardrail=false&currency=EUR&include_headers=false&is_cbo_enabled=false&locale=en_US&method=get&optimization_goal=LINK_CLICKS&prediction_duration=0&pretty=0&qpl_active_flow_ids=270213183&qpl_active_flow_instance_ids=270213183_10f159f5e1f7de592&send_long_term_prediction_shadow_request=true&skip_bid_suggestion=true&suppress_http_code=1&targeting_as_signal=0&targeting_spec=%7B%22geo_locations%22%3A%7B%22countries%22%3A%5B%22ES%22%5D%2C%22location_types%22%3A%5B%22home%22%5D%7D%2C%22age_min%22%3A18%2C%22age_max%22%3A65%2C%22publisher_platforms%22%3A%5B%22facebook%22%2C%22instagram%22%2C%22audience_network%22%2C%22messenger%22%5D%2C%22facebook_positions%22%3A%5B%22feed%22%2C%22instant_article%22%2C%22instream_video%22%2C%22right_hand_column%22%2C%22video_feeds%22%2C%22marketplace%22%2C%22story%22%2C%22facebook_reels_overlay%22%2C%22search%22%2C%22groups_feed%22%5D%2C%22instagram_positions%22%3A%5B%22stream%22%2C%22story%22%2C%22explore%22%2C%22reels%22%2C%22shop%22%5D%2C%22messenger_positions%22%3A%5B%22messenger_home%22%2C%22story%22%5D%2C%22device_platforms%22%3A%5B%22mobile%22%2C%22desktop%22%5D%2C%22audience_network_positions%22%3A%5B%22classic%22%2C%22rewarded_video%22%5D%2C%22oculus_positions%22%3A%5B%5D%2C%22excluded_publisher_list_ids%22%3A%5B%5D%2C%22user_device%22%3A%5B%5D%2C%22excluded_user_device%22%3A%5B%5D%2C%22user_os%22%3A%5B%5D%2C%22wireless_carrier%22%3A%5B%5D%2C%22targeting_optimization%22%3A%22none%22%2C%22flexible_spec%22%3A%5B%7B%22behaviors%22%3A%5B%7B%22id%22%3A%226019367052983%22%2C%22name%22%3A%22Lived%20in%20Germany%20(Formerly%20Expats%20-%20Germany)%22%7D%5D%7D%5D%2C%22brand_safety_content_filter_levels%22%3A%5B%22FACEBOOK_STANDARD%22%2C%22AN_STANDARD%22%5D%2C%22excluded_brand_safety_content_types%22%3A%5B%5D%7D&xref=f1fc69c10eafbe2', httr::add_headers(.headers=headers))
-
-reply <- content(res)
-#reply$data
-
-print(paste0("Mau (Monthly active users)",reply[["data"]][[1]][["estimate_mau"]]))
 
 
 library(WDI)
