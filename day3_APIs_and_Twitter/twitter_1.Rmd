@@ -215,7 +215,27 @@ print(fromJSON(obj))
 
 
 ```{R}
-query = URLencode('place:"Barcelona" lang:de') # Tweets 
+query = URLencode('place:"Germany"') # Tweets 
+url_handle <- sprintf("https://api.twitter.com/2/tweets/counts/recent?query=%s&granularity=day",query)
+print(url_handle)
+response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(fromJSON(obj))
+
+```
+
+```{R}
+query = URLencode('place_country:DE') # Tweets 
+url_handle <- sprintf("https://api.twitter.com/2/tweets/counts/recent?query=%s&granularity=day",query)
+print(url_handle)
+response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
+obj <- httr::content(response, as = "text")
+print(fromJSON(obj))
+
+```
+
+```{R}
+query = URLencode('place:"Deutschland"') # Tweets 
 url_handle <- sprintf("https://api.twitter.com/2/tweets/counts/recent?query=%s&granularity=day",query)
 print(url_handle)
 response <-  httr::GET(url = url_handle, httr::add_headers(.headers = headers))
@@ -298,5 +318,7 @@ https://developer.twitter.com/en/docs/api-reference-index
 
 ```{R}
 ```
+## Getting the Number of Tweets for all european countries:
+
 
 

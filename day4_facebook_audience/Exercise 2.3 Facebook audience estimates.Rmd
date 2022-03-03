@@ -1,0 +1,10 @@
+---
+title: 'Exercise: Facebook audience estimates'
+author: "Tom Theile"
+date: "23 2 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```

@@ -1,0 +1,157 @@
+---
+title: "Start a larger Facebook collection"
+author: "Tom Theile"
+date: "27 2 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Facebook collection
+
+We will use the official API-documentation from Facebook now. So let's have a look at
+
+
+
+```
+
+make_request_return_response <- function(targeting_spec):
+
+    token = `insert your token here (>100character token`
+    act = `number with 16 places`
+    version="v12.0"
+    
+    credentials=paste0('https://graph.facebook.com/', version, '/act_',act','/delivery_estimate?access_token=',' token', '&include_headers=false&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1')
+
+    query = paste0(credentials, '&targeting_spec=', json.dumps(targeting_spec))
+    try:
+        response = requests.get(query)
+    except Exception as e:
+        print("query-error b3", str(e),datetime.now())
+        time.sleep(100)
+        try:
+            response = requests.get(query)
+        except Exception as e:
+            print("query-error b4", str(e),datetime.now())
+            time.sleep(3600)
+            response = requests.get(query)
+    return response.content
+
+
+
+```
+
+
+
+```{r cars}
+
+df_expat_behaviours <- read.csv("./day3-api2/facebook_behavior_expat_origin.csv")
+head(df_expat_behaviours)
+
+```
+
+
+```{R}
+
+create_targeting_spec <- function(countries = c("ES","DE","FR"),age_min = 18, age_max = 65, behavior_id=none, behavior_name=none){
+  
+  
+  # This beginning will always stay the same to get comparable results:
+  facebook_stuff <- '
+  "publisher_platforms": [
+    "facebook",
+    "instagram",
+    "audience_network",
+    "messenger"
+  ],
+  "facebook_positions": [
+    "feed",
+    "instant_article",
+    "instream_video",
+    "right_hand_column",
+    "video_feeds",
+    "marketplace",
+    "story",
+    "facebook_reels_overlay",
+    "search",
+    "groups_feed"
+  ],
+  "instagram_positions": [
+    "stream",
+    "story",
+    "explore",
+    "reels",
+    "shop"
+  ],
+  "messenger_positions": [
+    "messenger_home",
+    "story"
+  ],
+  "device_platforms": [
+    "mobile",
+    "desktop"
+  ],
+  "audience_network_positions": [
+    "classic",
+    "rewarded_video"
+  ],
+  "oculus_positions": [],
+  "excluded_publisher_list_ids": [],
+  "user_device": [],
+  "excluded_user_device": [],
+  "user_os": [],
+  "wireless_carrier": [],
+  "targeting_optimization": "none",
+  "brand_safety_content_filter_levels": [
+    "FACEBOOK_STANDARD",
+    "AN_STANDARD"
+  ],
+  "excluded_brand_safety_content_types": []
+  ' 
+  
+  facebook_stuff <- strwrap(facebook_stuff, width=10000, simplify=TRUE)
+  
+  
+  geo_locations_begin <- '
+  "geo_locations": {
+    "countries": ['
+  
+  geo_locations_end <-'],
+    "location_types": [
+      "home"
+    ]
+  }'
+  countries_string <- paste0('"',countries,'"',  collapse=',')
+  geo_locations_string <- paste0(geo_locations_begin,countries_string,geo_locations_end)
+  geo_locations_string
+  
+  age_string <- paste0('"age_min":',age_min,'"age_max":',age_max)
+  
+  if(is.null(behavior_id)){
+    targeting_spec = paste0("{",geo_locations_string,",",facebook_stuff,",",age_string,"}")
+  } else {
+    
+    behavior_inner = paste0('"id": "', behavior_id,'","name":"', behavior_name,'"')
+    behavior_start <-'"flexible_spec": [
+      {
+        "behaviors": [
+          {'
+    behavior_end  <- '}
+        ]
+      }
+    ]'
+    behavior <- paste0(behavior_start,behavior_inner,behavior_end)
+    targeting_spec = paste0("{",geo_locations_string,",",facebook_stuff,",",age_string,",",behavior,"}")
+  }
+  
+  targeting_spec <- strwrap(targeting_spec, width=20000, simplify=TRUE)
+  
+  return(targeting_spec)
+}
+
+
+create_targeting_spec("DE",behavior_id = 2343,behavior_name = "none")
+
+```

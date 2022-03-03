@@ -73,7 +73,9 @@ You can for example adapt the query to get all the movies of a person:
 A large collection of books that in the public domain. https://www.gutenberg.org/robot/harvest
 The books can also be downloaded independently and are a nice resource for e-readers.
 
+
 ### OpenStreetMap
+
 [OpenStreetMap](http://www.openstreetmap.org) is the "Wikipedia of maps", a map of the whole world that is build by volunteers and available under the [OpenStreetMap license](https://www.openstreetmap.org/copyright) (which is permissive).
 
 You can download the whole dump or parts of it from https://archive.org/details/osmdata or https://wiki.openstreetmap.org/wiki/Planet.osm 
