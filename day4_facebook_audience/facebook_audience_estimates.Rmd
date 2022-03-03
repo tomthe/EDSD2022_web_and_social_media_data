@@ -179,13 +179,13 @@ res
 
 ```
 
-```{R}
+```{R, eval=FALSE}
 reply <-content(res,as="parsed")
 # reply very long
 ```
 now you can inspect the reply-object to find out how to access the audience estimates:
 
-```{R}
+```{R, eval=FALSE}
 print(paste("Mau (Monthly active users)",reply[["data"]][[1]][["estimate_mau"]]))
 print(paste("Mau (Monthly active users, lower bound)",reply[["data"]][[1]][["estimate_mau_lower_bound"]]))
 print(paste("Mau (Monthly active users, upper bound)",reply[["data"]][[1]][["estimate_mau_upper_bound"]]))
@@ -202,7 +202,7 @@ Now you should get a different result.
 
 This is an example targeting_spec:
 
-```{R}
+```{R, eval=FALSE}
 `targeting_spec` = '{"geo_locations":{"countries":["ES"],"location_types":["home"]},"age_min":18,"age_max":65,"publisher_platforms":["facebook","instagram","audience_network","messenger"],"facebook_positions":["feed","instant_article","instream_video","right_hand_column","video_feeds","marketplace","story","facebook_reels_overlay","search","groups_feed"],"instagram_positions":["stream","story","explore","reels","shop"],"messenger_positions":["messenger_home","story"],"device_platforms":["mobile","desktop"],"audience_network_positions":["classic","rewarded_video"],"oculus_positions":[],"excluded_publisher_list_ids":[],"user_device":[],"excluded_user_device":[],"user_os":[],"wireless_carrier":[],"targeting_optimization":"none","exclusions":{"behaviors":[{"id":"6086568164383","name":"Marketing API developers (last 90 days)"},{"id":"6063136545383","name":"Android: 360 degree media supported"}]},"flexible_spec":[{"life_events":[{"id":"6003053984972","name":"Long-distance relationship"}]}],"brand_safety_content_filter_levels":["FACEBOOK_STANDARD","AN_STANDARD"],"excluded_brand_safety_content_types":[]}'
 ```
 
@@ -296,7 +296,7 @@ if we format it, it looks like this:
 
 If we want to automate the collection of data, we need many targeting-specs. I built a function that creates targeting-specs based on a few input-variables:
 
-```{R}
+```{R, eval=FALSE}
 
 create_targeting_spec <- function(age_min = 18,age_max = 65,countries = c("ES","DE","FR"),only_expats=FALSE){
   
@@ -400,7 +400,7 @@ Now let's create a new request and replace the targeting spec with our self-gene
 
 
 
-```{R}
+```{R, eval=FALSE}
   
   require(httr)
 
@@ -496,11 +496,11 @@ print(paste("Dau (Daily active users)",reply[["data"]][[1]][["estimate_dau"]]))
   
 
 ```{r <inspect>, out.width='90%', fig.cap='', echo=FALSE}
-knitr::include_graphics('../images/get_token2.png')
+#knitr::include_graphics('./images/get_token2.png')
 ```
 
 save your token and App Id here:
-```{R}
+```{R, eval=FALSE}
 ftoken <- "EAATi8YeQqs0BAFzUE8P3WvZBfAMc5tdknnum2P5IU1isF2eIjBCugGIsUEXhlxdypemy5qFe4Y2KQxAOZAzCVjBNDyqeZBQxqhb791dEsIYXE6sFMYrLUCD8YnIxCQ6OVlmwqDEilfK35juqe7zuGmHxZBu8cGiQUdZAzQtIZCrejylySOdPSD"
 fappid <- "1375426896243405"
 
@@ -535,7 +535,7 @@ But the documentation doesn't really tell us what to do.
 
 
 
-```{R}
+```{R, eval=FALSE}
 library(tidyverse)
 library(jsonlite)
 
@@ -579,7 +579,7 @@ res
 ```
 
 
-```{R}
+```{R, eval=FALSE}
 
 make_request_and_get_mau <- function(tarspec) {
   
@@ -636,7 +636,7 @@ make_request_and_get_mau <- function(tarspec) {
 Creating a single request is definitely easier in the GUI, but we want to make hundreds and thousands of requests. 
 Therefore, we loop over inputs to generate new targeting-specs and request the results from Facebook.
 
-```{R}
+```{R, eval=FALSE}
 
 agegroups = list(c(18,65))#,c(18,39),c(40,65))
 countries = c('AL', 'AD', 'AM', 'AT', 'BY', 'BE', 'BA', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FO', 'FI', 'FR', 'GB', 'GE', 'GI', 'GR', 'HU', 'HR', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MC', 'MK', 'MT', 'NO', 'NL', 'PL', 'PT', 'RO', 'RS', 'RU', 'SE', 'SI', 'SK', 'SM', 'TR', 'UA')
@@ -686,7 +686,7 @@ write.csv(dfmm,file="facebook_audience_estimates_1.csv")
 
 ### Plot the results versus World Bank data
 
-```{R}
+```{R, eval=FALSE}
 
 
 library(WDI)
