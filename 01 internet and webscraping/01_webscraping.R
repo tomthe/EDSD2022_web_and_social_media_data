@@ -10,6 +10,9 @@
 # This is a good and short introduction into the concepts of the tidyverse:
 # https://www.r-bloggers.com/2020/06/a-very-short-introduction-to-tidyverse/
 
+# You probably have installed the tidyverse already as a part of other EDSD courses.
+# But if you haven't, you can do so by executing the next line:
+
 install.packages("tidyverse")
 
 # rvest is a package that helps you to scrape websites.
@@ -21,7 +24,6 @@ install.packages("tidyverse")
 
 # load the library rvest:
 library(rvest)
-
 
 library(dplyr)
 
@@ -39,6 +41,8 @@ example_html
 
 # Now open example.com with a browser and start SelectorGadget.
 # Select the headline "Example Domain" and copy the selector.
+
+# ----------------------------------------------------------
 
 # Spoiler: the selector is "h1"
 # now you can use the rvest function html_elements to extract all
@@ -140,9 +144,11 @@ View(dfheadlines2)
 #
 # https://cran.r-project.org/web/packages/syuzhet/syuzhet.pdf
 #
-# State of the art models for sentiment analysis use deep neural networks. The
-# syuzhet-package does not use these advanced techniques, but is still used in
-# research nevertheless.
+# State of the art models for sentiment analysis use very large deep neural 
+# networks pretained on gigabytes or terabytes of text data. They require
+# a good GPU to run fast.
+# The syuzhet-package does not use these advanced techniques, but it is still used
+# in research nevertheless.
 #
 # While methods like sentiment analysis are hard tasks in itself, it can be
 # easily applied if other researchers provide code or even an easy to use package.
@@ -208,13 +214,12 @@ View(df_joy)
 # 4.1 Plotting
 ##############
 
-# I have scraped a slightly bigger dataset for a previous course this year.
-# it contains headlines from 4 different news websites and from several days at
-# the end of February.
-# You can find it in the data subfolder on nextcloud.
+# I have scraped a slightly bigger dataset for a previous course.
+# it contains headlines from 4 different news websites.
+# You can find it in the data subfolder.
 # This dataset offers more ways to filter and plot news data.
 
-fn ="df_all_headlines_sentiments_2022_02.csv"
+fn ="data/df_headlines_sentiments_1.csv"
 # (maybe you need adjust the filename fn)
 df_headlines_sentiments = read.csv(fn)
 
@@ -250,7 +255,7 @@ geom_point(alpha = 0.1, aes(color = trust))
 # Find the css selector to scrape the temperature from "Kachelmannwetter.com"
 # (You can also choose any other weather website you want)
 # Find the link to the city of your affiliated institute/university
-# Scrape the temperature at your affiliation's city and print it out
+# Scrape the temperature at your affiliation's city and print it to the console
 # 
 # Here it starts with reading the page for my affilliations city:
 
@@ -258,4 +263,6 @@ page_weather <- read_html("https://kachelmannwetter.com/de/wetter/2844588-rostoc
 
 ###########
 # Assignment 3:
-# Please read "
+# Please read
+# "The Impact of Hurricane Maria on Out-migration from Puerto Rico: Evidence
+# from Facebook Data" (Alexander 2019). You can find it in the readings folder

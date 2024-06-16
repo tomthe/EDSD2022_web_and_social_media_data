@@ -4,7 +4,7 @@
 # 0. Parsing JSON
 ####################################
 # the jsonlite package can parse json-strings so that 
-# it is easier to access the data inside:
+# it is easier to access the data inside them:
 install.packages("jsonlite")
 
 library(jsonlite)
@@ -40,7 +40,7 @@ json_parsed$menu$popup$menuitem$value[1]
 # 1. Weather API - Retrieving the temperature in Rostock
 #####################################
 
-# Most APIs require an authentication by the user, but some don't. BrightSky is a
+# Most APIs require an authentication by the user, but some don't. Open-meteo is a
 # weather API that does not require an authentication and it is easy to get started.
 # Good APIs have a good documentation. Use the documentation!
 
@@ -97,7 +97,7 @@ rescontent$hourly$time[[1]]
 # http://open-notify.org/Open-Notify-API/ISS-Location-Now/
 # https://developer.spotify.com/documentation/web-api/
 # https://spoonacular.com/food-api
-# to add: google maps geocode
+# geocoding and reverse geocoding apis
 #
 #############################
 
