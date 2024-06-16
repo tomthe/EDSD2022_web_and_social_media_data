@@ -13,3 +13,8 @@ It would be good if you create an account with Facebook and OpenAI before the co
 
 x7 Twitter - This part will be skipped, since twitter faded into X and X has no useful API anymore.
 I left the content here in case anyone is interested in it.
+
+## File access
+
+The files will also be available in this share:
+https://nextcloud.demogr.mpg.de/s/NWp7m5xp5W8TZWS
