@@ -3,8 +3,13 @@
 ####################################
 # 0. Parsing JSON
 ####################################
-# the jsonlite package can parse json-strings so that 
-# it is easier to access the data inside them:
+# A lot of web-APIs respond with JSON-strings.
+# JSON is a text-based stuctured data format.
+# It can store key-value pairs, the values can be numbers, strings,
+# lists or a collection of key-value pairs themselfes. This allows
+# hierarchical data and easy programmatical access of the data.
+# The jsonlite package can parse json-strings so that 
+# it is easier to access the data inside:
 install.packages("jsonlite")
 
 library(jsonlite)
@@ -23,13 +28,14 @@ json_string <- '{"menu": {
 }}'
 
 # we can parse the string with jsonlite::fromJSON:
-json_parsed <- fromJSON(json_string)
+
+json_parsed <- jsonlite::fromJSON(json_string)
 
 #Then we can use $ to access sub-parts of the hierarchical json object:
 json_parsed$menu$value
 
-# Try to acces the string "file":
-json_parsed$menu$
+# **Exercise: **Try to acces the string "file":
+json_parsed$ ...?
 
 # get the value of the first menuitem:
 json_parsed$menu$popup$menuitem$value[1]
@@ -49,17 +55,22 @@ json_parsed$menu$popup$menuitem$value[1]
 
 # Install and load the necessary packages to do HTTP-request and read json:
 install.packages("httr") # this package can request URLs over the internet
+install.packages("jsonlite") # this package can parse json-strings so that 
+# it is easier to access the data inside
+
 
 library(httr) # httr will do the requests for us (instead of rvest)
 library(jsonlite)
-# library(lubridate)
+library(lubridate)
 
 
 # Retrieve the URL and the parameters from the documentation of the API!
+# (You can try this in the browser)
+# --> https://api.brightsky.dev/weather?lat=54.08&lon=12.1&date=2023-12-01
+
 # Call the API and store the response in a variable
 
 url1 = "https://archive-api.open-meteo.com/v1/era5?latitude=-41.2865&longitude=174.7762&start_date=1990-01-01&end_date=1990-01-02&hourly=temperature_2m,relativehumidity_2m"
-url1 = "https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.16&hourly=temperature_2m,relativehumidity_2m"
 
 res <- GET(url1)
 res
@@ -70,19 +81,22 @@ rescontent = content(res) # content() is a function of the httr package
 # click on the function and press F1 to find out more!
 
 # look into the content to find out what exactly we want to extract
-rescontent$hourly$temperature_2m
+rescontent
 
 # this gives us the temperature in the first predicted hour:
+rescontent$hourly$temperature_2m[[1]]
 rescontent$hourly$time[[1]]
-
+#...
 
 
 
 ##########################
-# Exercise 3.2.1
+# Exercise 3.1
 # Get the temperature, cloud cover and Humidity of your hometown at noon on your last birthday!
 # consult the open-meteo documentation on how to retrieve data from the past
 #
+
+#############################
 # Optional Extra-Exercise 1: plot the temperature on 20 points from the north-pole
 # to the south pole in a line-plot
 #
@@ -98,7 +112,6 @@ rescontent$hourly$time[[1]]
 # https://developer.spotify.com/documentation/web-api/
 # https://spoonacular.com/food-api
 # geocoding and reverse geocoding apis
-#
 #############################
 
 
