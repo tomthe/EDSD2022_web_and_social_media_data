@@ -66,7 +66,7 @@ headline
 
 
 ######################################
-# 3 - Scrape headlines from The Waschington Post
+# 3 - Scrape headlines from The Washington Post
 ######################################
 
 # open washingtonpost.com in a browser
@@ -81,7 +81,7 @@ wp_html <- read_html("https://www.washingtonpost.com/")
 
 # Spoiler: ".font--headline span" is a good selector string,
 # but "h2" is even simpler and better:
-selector <- ".font--headline span"#"h2"
+selector <- "h2"
 
 # extract headlines:
 headlines <- wp_html %>% html_nodes(selector)%>% html_text2()
@@ -178,7 +178,7 @@ df_headlines_sentiments <- cbind(dfheadlines2,sentiments,sentiments_nrc)
 View(df_headlines_sentiments)
 
 result_folder <- "./"
-write.csv(df_headlines_sentiments,paste0(result_folder,"df_headlines_sentiments1.csv"))
+write.csv(df_headlines_sentiments,paste0(result_folder,"df_headlines_sentiments1__.csv"))
 
 
 # Now we can filter by some criteria:
@@ -223,6 +223,8 @@ fn ="data/df_headlines_sentiments_1.csv"
 # (maybe you need adjust the filename fn)
 df_headlines_sentiments = read.csv(fn)
 
+View(df_headlines_sentiments)
+
 df_headlines_sentiments$date = as.Date(df_headlines_sentiments$date)
 print(head(df_headlines_sentiments))
 summary(df_headlines_sentiments)
@@ -233,10 +235,23 @@ summary(df_headlines_sentiments)
 # This is a good introduction, if you want to know more:
 # https://uc-r.github.io/ggplot_intro
 library(ggplot2)
-ggplot(data = df_headlines_sentiments, mapping = aes(x = news_url, y = fear)) +
+ggplot(data = df_headlines_sentiments, mapping = aes(x = date, y = sentiments)) +
   geom_violin(alpha=0)+
   geom_jitter(alpha = 0.3, color = "tomato")
 geom_point(alpha = 0.1, aes(color = trust))
+
+
+filterwords = 'Paris|paris|France|French'
+filterwords = 'Gaza'
+
+df_filtered <- df_headlines_sentiments %>%
+  filter(str_detect(headlines, filterwords))
+View(df_filtered)
+
+ggplot(data = df_filtered, mapping = aes(x = date, y = sentiments)) +
+  #geom_violin(alpha=0)+
+  geom_jitter(alpha = 0.3, color = "tomato")
+geom_point(alpha = 0.1, aes(color = sentiment))
 
 
 
@@ -260,6 +275,24 @@ geom_point(alpha = 0.1, aes(color = trust))
 # Here it starts with reading the page for my affilliations city:
 
 page_weather <- read_html("https://kachelmannwetter.com/de/wetter/2844588-rostock")
+selector = ".current-w-temp"
+
+
+temperature <- page_weather %>% html_nodes(selector)%>% html_text2()
+temperature
+
+#####
+
+page_weather <- read_html("https://www.windfinder.com/forecast/paris_ile_de_france_france")
+selector = "._2PEcpOHB8qFkefFwy96UF6"
+selector = ".current-weather-info"
+
+
+temperature <- page_weather %>% html_nodes(selector)%>% html_text2()
+temperature
+
+
+
 
 ###########
 # Assignment 3:
