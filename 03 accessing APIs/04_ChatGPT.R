@@ -21,6 +21,7 @@
 # https://platform.openai.com/api-keys
 
 
+
 # ChatGPT API Documentation:
 # https://platform.openai.com/docs/guides/text-generation/chat-completions-api
 
@@ -128,9 +129,8 @@ nrow(df_headlines1)
 # GPT-4o costs much more ( 5$ for 1 M input token), but is also better.
 # Experiment with the prompt to find out which model works good enough.
 
-# Let's create a prompt for the ChatGPT API that uses 5 headlines
+# Let's create a prompt for the ChatGPT API that uses 7 headlines
 
-# Let's create a prompt for the ChatGPT API that uses 5 headlines
 library(glue)
 i = 0
 
@@ -144,7 +144,7 @@ I want to know
 
 
 example answer:
-'Car accident in New York City, father and daughter died.', regional, -0.6, unkown, New York City
+'Car accident in New York City, father and daughter died.', regional, -0.6, 2,unkown, New York City
 
 Headlines:
 1. %s
@@ -154,6 +154,8 @@ Headlines:
 5. %s
 6. %s
 7. %s
+
+Use only one row per headline! Do not add anything else.
 
 ",{df_headlines1$headline[i+1]},{df_headlines1$headline[i+2]},{df_headlines1$headline[i+3]},
                  {df_headlines1$headline[i+4]},{df_headlines1$headline[i+5]},
@@ -221,7 +223,7 @@ I want to know
 
 
 example answer:
-'Car accident in New York City, father and daughter died.', regional, -0.6, unkown, New York City
+'Car accident in New York City, father and daughter died.',regional,-0.6,2,unkown,New York City
 
 Headlines:
 1. %s
