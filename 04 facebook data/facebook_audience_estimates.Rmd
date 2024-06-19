@@ -62,19 +62,19 @@ knitr::include_graphics('../images/facebook_audience_estimate_barcelona.png')
 ```
 
 
-**Exercise 3.1:** 
+**Exercise 4.1:** 
 Play with the targeting GUI in the browser and read out some values:
 
 
-* How many users live in a 25 Mile radius around Barcelona?
+* How many users live in a 25 Mile radius around Paris?
 * How many of those speak German?
-* How many users live in Spain?
+* How many users live in France?
 * Now look at the detailed targeting --> Browse and click through some targeting criteria
- * How many users from Spain are in a long-distance-relationship?
+ * How many users from France are in a long-distance-relationship?
  * find some strange targeting criteria! The student with the funniest audience wins!
 * You can also exclude people based on the same criteria
- * How many users from Spain are in a long-distance-relationship AND have a relationship-status "complicated"?
- * How many users from Spain ARE in a long-distance-relationship AND NOT have a relationship-status "complicated"?
+ * How many users from France are in a long-distance-relationship AND have a relationship-status "complicated"?
+ * How many users from France ARE in a long-distance-relationship AND NOT have a relationship-status "complicated"?
 
 
 ### Use R to get audience estimates
@@ -90,7 +90,8 @@ We will:
 (* look how the official API works and automate the collection of facebook audience estimates.)
 * use a newly released R-package that we can use to collect audience estimates
 
-
+##########################################################################################
+##############              SKIP SCRAPING FROM HERE: 
 
 
 #### Reverse Engineering the audience estimates
@@ -103,7 +104,7 @@ Steps:
   * Hint: it must be a response with structured data. No PNG-image or js-file. Look for json-files. If there are several json-responses, look closer into the response data - Can you find the audience estimate numbers?
   * Hint 2: search for "estimate"
 * Look at the request. We have to recreate the whole thing to get an answer from Facebook.
-* right click on the request --> copy as cURL(POSIX)
+* right click on the request --> copy as cURL(POSIX) (Firefox)     or copy as cURL(bash) (Chrome)
 * Paste the clipboard into this page: https://curlconverter.com/#r
 * copy the code for R into a new R-script, or replace the next cell.
 
@@ -453,7 +454,7 @@ library(tidyverse)
 library(jsonlite)
 
 
-version="v13.0" 
+version="v20.0" 
     
 Credentials=paste0('https://graph.facebook.com/',version,'/act_',fappid,'/delivery_estimate?access_token=',ftoken,'&include_headers=false&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1')
 
@@ -598,13 +599,16 @@ dffacebook = dfmm %>%
 
 ```
 
+##########################################################################################
+##############              SKIP SCRAPING UNTIL HERE.                 ####################
+#### you can go on from here
 
 
 ################################################################################
 
 # Rsocialwatcher - The easy way
 
-Robert Marty, a researcher at the world bank has released an R-package that
+Robert Marty, a researcher at the world bank has recently (2024) released an R-package that
 simplifies the collection of Facebook audience estimates.
 
 https://worldbank.github.io/rsocialwatcher/
@@ -620,8 +624,8 @@ library(dplyr)
 
 ### Facebook Access token
 
-Either you have it already or you can follow the description on this site on
-how to obtain the correct access token:
+Either you have it already or you can follow the description on this site
+to obtain the correct access token:
 https://worldbank.github.io/rsocialwatcher/articles/create_facebook_credentials.html
 
 I borrowed a lot of code here from their documentation at https://worldbank.github.io/rsocialwatcher/
@@ -720,7 +724,8 @@ query_fb_marketing_api(
 Putting parameters in the map_param function results in the
 query_fb_marketing_api function making multiple queries.
 
-Example: Make queries for different countries.
+Example: Make queries for different combination of home-countries and "lived-in-countries"
+
 ```{R}
 country_df |> 
   filter(name %in% c("Germany", "Spain", "Poland")) |> 
@@ -744,10 +749,10 @@ write.csv(fresult, "facebook_audience_estimates_es_de_po.csv")
 
 ```
 
-```{R}
 
-```
+**Exercise 4.2:** 
+ * Collect interesting migration data (we already did this in the example above)
+ * Plot this data. E.g. you can plot a heatmap, an origin-destination matrix.
 
-```{R}
 
-```
+
