@@ -138,7 +138,7 @@ headers = c(
 )
 
 params = list(
-  `access_token` = 'iHgBAMhMbKgEU3TTSTjYTGeluwcuvYaIhSZCSSqg39Ck5OkCI3371sDeBSiRMbss8j0ZBa8C7ATLlCgeb8qbuaFY0uxPsYjDNnLOvqalGoXBomO9bp0y3iF5F1Tz0FKYOvZCTHMq4jq1PpB4gZDZD',
+  `access_token` = '',
   `__cppo` = '1',
   `__activeScenarioIDs` = '[]',
   `__activeScenarios` = '[]',
@@ -638,10 +638,6 @@ I borrowed a lot of code here from their documentation at https://worldbank.gith
 VERSION      <- "[ENTER HERE]" # Example: "v20.0"
 CREATION_ACT <- "[ENTER HERE]"
 TOKEN        <- "[ENTER HERE]"
-
-VERSION = "v20.0"
-CREATION_ACT = "660797563979760"
-TOKEN = "EAATi8YeQqs0BO4aldZC5tIF5Pco1EnqzH7cjUsEZCwqA8qHXjDChvElRb1hcNgTeFD8bsI57OizEUihGy3ZC4asyDuDRN2uDkNe9tZACCAM5ZBIEtCoh0Q2Xt4fxqP4OvJZCmnMMWwxE4bCLQFMzURd3oDgQjY1tXOdMGgX3ZAHSbggIoZCp9LZBtHsZAs7Yp2xzy3jvZC3doCN7bdwWLOI"
 
 ```
 
