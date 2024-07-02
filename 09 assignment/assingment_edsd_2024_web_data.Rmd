@@ -1,0 +1,117 @@
+---
+title: "Assignment - Web and Social Media Data"
+author: "Tom Theile"
+date: "EDSD June 2024"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Assingment
+
+Please answer the questions inside this document. Write your answers into the
+code blocks which are marked by three backticks ```. Some question(s) require you
+to create a file.
+
+When you are done, put:
+
+ * this file
+ * the compiled (knitted) RMarkdown-document
+ * all created file(s)
+
+into one zip file. Name that zip "Firstname_Lastname.zip" and send it to my email:
+theile@demogr.mpg.de 
+
+Deadline: Wednesday (June 26, 2024) 5pm
+
+
+#### Please write the HTML-code for a small Webpage.
+Include a headline and a paragraph and again a headline and a paragraph.
+Use CSS to change the color of the headlines to yellow.
+
+```
+
+```
+
+#### Scrape the roles of the whole staff of the MPIDR
+
+Scrape this page https://www.demogr.mpg.de/en/about_us_6113/staff_directory_1899/ with R and `rvest`.
+We are not interested in the names, but only in the job titles of the people. Collect all the 
+job titles ("Guest Researcher", "Research Scientist",...). Count them and print out the total number 
+and the numbers disaggregated by distinct job title.
+
+```{R}
+
+```
+
+
+#### What is an API? Please explain in 2 or 3 sentences
+
+```
+
+```
+
+#### Use R and and two APIs to fetch a joke and let ChatGPT explain the joke.
+
+1. Use R to fetch a joke from an API (you can alternatively use a different API to fetch some sentence(s))
+2. Extract that joke from the response and print it to the console
+3. Send the joke to the ChatGPT API and ask for an explanation.
+4. Print the explanation to the console
+
+You can find a new OpenAI API-key in the file 'openAI-key.txt'
+
+Alternatively: Use a different API than the joke API and fetch something of similar importance.
+
+```{R}
+
+```
+
+
+#### Download data about the number of migrants in every EU country.
+
+Total numbers and as a share of total population.
+Long or tidy format. You can use the WDI package.
+Get data for the last 20 years and save it as a csv-file (you can use 
+the `write.csv( )` function)
+Show the code and the first few rows of the data.frame. (head(df) prints the
+first 5 rows of df).
+
+```{R}
+
+```
+
+
+#### Plot the share of Migrants in a few selected countries from 2002 to now.
+
+You can choose the countries yourself. 
+
+```{R}
+
+```
+
+
+
+#### Use Wikidata to create and download a list of all Universities worldwide.
+
+This would be an appropriate identifier: https://www.wikidata.org/wiki/Q3918 
+
+Create a table with columns for the name of the universities, the wikidata-id.
+It would be great to have optionally more columns with information about every 
+university (gps-coordinates? Twitter-handles? Be creative, if you want).
+
+Save the data as csv-file, please. You can use the query service https://query.wikidata.org/
+It is not easy to get the extra-columns with the information you want, but with the help of
+the examples you can find out how to to this.
+
+Save the result as a csv file and copy the SparQL code here into this file:
+```{SPARQL}
+
+```
+
+
+#### Freedom of Information Request
+
+Describe the steps necessary to file a successful Freedom of Information Request 
+in your country of citizenship. (around 250 to 600 words, please).
