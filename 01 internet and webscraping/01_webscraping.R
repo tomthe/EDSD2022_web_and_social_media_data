@@ -82,6 +82,7 @@ wp_html <- read_html("https://www.washingtonpost.com/")
 # Spoiler: ".font--headline span" is a good selector string,
 # but "h2" is even simpler and better:
 selector <- "h2"
+selector <- ".wrap-text .wpds-c-iiQaMf span"
 
 # extract headlines:
 headlines <- wp_html %>% html_nodes(selector)%>% html_text2()
@@ -93,7 +94,7 @@ links <- wp_html %>%
   html_elements("a") %>% 
   html_attr('href')
 links
-# Can you guess, what the code does?
+# Can you guess what the code does?
 
 
 
@@ -104,6 +105,7 @@ dfheadlines <- data.frame(
   scrapetime =Sys.time(),
   shortname = "wp"
 )
+
 # you can view the dataframe in the RStudio GUI:
 View(dfheadlines)
 
