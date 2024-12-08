@@ -1,0 +1,327 @@
+---
+title: "Accessing Bluesky API to study International Migration"
+output: html_notebook
+author: "Jisu Kim & Tom Theile" 
+---
+
+
+
+```{r}
+# Install if you don't have these packages
+# install.packages("httr")
+# install.packages("jsonlite")
+
+library(httr)
+library(jsonlite)
+```
+
+```{r}
+# Define the base URL for the API
+base_url <- "https://bsky.social/xrpc"
+
+
+# Set your identifier and password here
+identifier <- "jkimmm.bsky.social"  # Your Bluesky handle 
+password <- ""    # Your password
+
+
+
+identifier = "theiletom.bsky.social"
+password = "i2ft-covh-vqr6-7d5f"
+
+
+    'identifier': 'theiletom.bsky.social',
+    'password': 'i2ft-covh-vqr6-7d5f',
+
+```
+
+```{r}
+# Function to create session (log in)
+createSession <- function(identifier, password) {
+  url <- paste0(base_url, "/com.atproto.server.createSession")
+  
+  # Prepare the body for POST request
+  body <- toJSON(list(
+    identifier = identifier,
+    password = password
+  ), auto_unbox = TRUE)
+  
+  # Make the POST request
+  response <- POST(url, body = body, encode = "json", 
+                   content_type_json())
+  
+  # Parse the response
+  session <- content(response, as = "parsed", type = "application/json")
+  
+  if (status_code(response) == 200) {
+    cat("Logged in as:", session$did, "\n")
+  } else {
+    cat("Login failed with status:", status_code(response), "\n")
+    print(session)
+  }
+  
+  return(session)
+}
+
+
+# Login and create session
+session <- createSession(identifier, password)
+```
+
+
+```{r}
+# Function to fetch timeline posts with filter
+getTimeline <- function(session, limit = 5, filter = NULL) {
+  url <- paste0(base_url, "/app.bsky.feed.getTimeline")
+  
+  # Prepare query parameters
+  params <- list(limit = limit)
+  
+  # Make the GET request with the session headers (if needed)
+  response <- GET(url, query = params, add_headers(Authorization = paste("Bearer", session$accessJwt)))
+  
+  # Parse the response
+  timeline <- content(response, as = "parsed", type = "application/json")
+  
+  return(timeline)
+}
+
+# Get my timeline 
+timeline <- getTimeline(session, limit=10)
+
+# Print the timeline
+# print(timeline)
+# print(timeline$feed)
+if (!is.null(timeline$feed)) {
+  for (post_entry in timeline$feed) {
+    # Access the post details through the 'post' field
+    post <- post_entry$post
+    
+    # Access the post content (under 'record') and author details
+    content <- post$record$text
+    author <- post$author$handle
+    createdat <- post$author$createdAt
+    lang <- post$record$langs[[1]]
+    
+    # Print the post content and author details
+    cat("Author Handle:", author, "\n")
+    cat("Author's account created at:", createdat, "\n")
+    cat("Language of the post:", lang, "\n")
+    cat("Post Content:", content, "\n")
+  }
+} else {
+  cat("No posts found in timeline results\n")
+}
+
+
+```
+
+
+
+```{r}
+# Function to search posts by relevant words
+searchPosts <- function(session, query, limit = 100) {
+  url <- paste0(base_url, "/app.bsky.feed.searchPosts")
+  
+  # Prepare query parameters
+  params <- list(q = query, limit = limit)
+  
+  # Make the GET request with the session headers (if needed)
+  response <- GET(url, query = params, add_headers(Authorization = paste("Bearer", session$accessJwt)))
+  
+  # Parse the response
+  search_results <- content(response, as = "parsed", type = "application/json")
+  
+  return(search_results)
+}
+
+# # Search posts by relevant words: e.g., migrant, refugee
+# filterlist <- c("immigrant", "refugee")
+# 
+# # Combine the terms in filterlist into a single query string
+# query <- paste(filterlist, collapse = " OR ")  # This will form a query like "immigrant OR refugee"
+
+# Make the API call to search posts using the combined query
+search_results <- searchPosts(session, "migrant")  
+
+# Print search results
+# print(search_results$posts)
+
+# Initialize an empty list to store the results
+mig_list <- list()
+
+if (!is.null(search_results$posts)) {
+  # Loop through each post in search results
+  for (post_entry in search_results$posts){
+      
+    # Extract the content (text) of the post
+    content <- post_entry$record$text
+    # Extract the author's handle
+    author <- post_entry$author$handle
+    # Extract the creation date
+    created_at <- post_entry$author$createdAt
+    
+    # Append the data as a list to mig_list
+    mig_list <- append(mig_list, list(list("author_name" = author,"text" = content,"created_at" = created_at)))}
+} else {
+  cat("No posts found in search results\n")
+}
+
+# Convert the list to a data frame
+mig_df <- do.call(rbind, lapply(mig_list, as.data.frame))
+  
+# Save the data frame to a CSV file
+# write.csv(mig_df, file = "migration_search_results.csv", row.names = FALSE)
+
+mig_df
+```
+
+
+```{r}
+# Function to get the list of accounts the user is following
+getFollowing <- function(session, actor, limit = 100) {
+  # Construct the URL (replace with actual endpoint if necessary)
+  url <- paste0(base_url, "/app.bsky.graph.getFollows")  # Replace with correct URL if needed
+  
+  # Prepare the query parameters (including the actor and limit)
+  params <- list(
+    actor = actor,  # The DID or handle of the user
+    limit = limit   # Limit the number of results returned
+  )
+  
+  # Make the GET request with the session token for authentication
+  response <- GET(url, query = params, add_headers(Authorization = paste("Bearer", session$accessJwt)))
+  
+  # Parse the response
+  follows <- content(response, as = "parsed", type = "application/json")
+  
+  return(follows)
+}
+
+
+# Use your session object and the DID of the logged-in user (from session$did)
+following_list <- getFollowing(session, session$did, limit = 10)
+
+# Print the list of users you are following
+# print(following_list)
+
+# Initialize an empty list to store follow information
+follow_data <- list()
+
+# Print the list of users and retrieve only the selected information
+# The indexedAt timestamp generally represents the time the record was "first seen" by an API server, though it might also be updated if the record is edited.
+if (!is.null(following_list$follows)) {
+  for (follow in following_list$follows) {
+    # Extract necessary fields
+    display_name <- follow$handle
+    created_at <- follow$createdAt
+    description <- follow$description
+    
+    # Append the data to the list
+    follow_data <- append(follow_data, list(
+      list(
+        "Followed" = follow$handle,  # using handle for CSV consistency
+        "Friend Created At" = created_at,
+        "Description" = description
+      )
+    ))
+  }
+} else {
+  cat("No follows found.\n")
+}
+```
+
+```{r}
+# Convert the follow data list into a data frame
+follow_df <- do.call(rbind, lapply(follow_data, as.data.frame))
+follow_df
+# Save the data frame as a CSV file
+# write.csv(follow_df, file = "follows_list.csv", row.names = FALSE)
+
+# Confirm that the file has been saved
+# cat("Follows list has been saved as 'follows_list.csv'\n")
+
+```
+
+
+
+```{r warning=FALSE}
+# Load necessary libraries
+
+# Install if you don't have these packages
+# install.packages("ggplot2")
+# install.packages("dplyr)
+# install.packages("tm")
+# install.packages("wordcloud")
+
+library(ggplot2)
+library(dplyr)
+library(tm)  # For text mining
+library(wordcloud)  # For word clouds
+```
+
+
+
+```{r Word Cloud for Descriptions}
+# Word Cloud for Descriptions
+# Combine descriptions into a single text
+texts <- paste(mig_df$text, collapse = " ")
+corpus <- Corpus(VectorSource(texts))
+# Remove stopwords
+corpus <- tm_map(corpus, removeWords, stopwords("en"))
+# Remove punctuation
+corpus <- tm_map(corpus, removePunctuation)
+tdm <- TermDocumentMatrix(corpus)
+matrix <- as.matrix(tdm)
+word_freqs <- sort(rowSums(matrix), decreasing = TRUE)
+word_data <- data.frame(word = names(word_freqs), freq = word_freqs)
+
+# Plotting the Word Cloud
+set.seed(1234)
+wordcloud(words = word_data$word, freq = word_data$freq, min.freq = 1,
+          max.words = 100, random.order = FALSE, rot.per = 0.35,
+          colors = brewer.pal(8, "Dark2"))
+```
+
+
+
+
+
+
+```{r}
+# Bar Chart of Most Common Words in Descriptions
+# Create a data frame of the most common words for a bar chart
+common_words <- word_data %>% 
+  filter(freq > 5) %>% 
+  arrange(desc(freq))
+
+ggplot(common_words, aes(x = reorder(word, freq), y = freq)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Most Common Words in Friend Descriptions", x = "Words", y = "Frequency") +
+  theme_minimal()
+
+
+```
+
+
+```{r}
+# 4. Time Series Plot 
+# Example of counting posts per day
+daily_posts <- mig_df %>%
+  group_by(date = as.Date(created_at)) %>%
+  summarise(count = n())
+
+ggplot(daily_posts, aes(x = date, y = count)) +
+  geom_line(color = "blue") +
+  geom_point() +
+  labs(title = "Number of Follows Over Time", x = "Date", y = "Number of posts") +
+  theme_minimal()
+```
+
+
+```{r}
+
+```
+
+
