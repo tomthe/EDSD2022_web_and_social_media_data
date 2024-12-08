@@ -50,9 +50,11 @@ to get an intuitive understanding of it.
 
 * create a new campaign
 
-* choose "traffic" (or anything, it doesn't matter since this does not affect the reach estimates)
+* choose "traffic" (Awareness does not give us the same targeting options.)
 
 * keep the defaults and click "next" on the bottom
+
+* Do not use the AI-audience improvements
 
 * scroll to "Audience" and create a new audience
 
@@ -84,10 +86,10 @@ There are two ways to collect audience estimates with R:
 * The official marketing API
 * The 'unofficial' API, which is used by the web application GUI
 
-We will:
+If the time allows, we will:
 
 * use our scraping-knowledge to reverse engineer and use the unofficial API
-(* look how the official API works and automate the collection of facebook audience estimates.)
+* look how the official API works and automate the collection of facebook audience estimates.
 * use a newly released R-package that we can use to collect audience estimates
 
 ##########################################################################################
