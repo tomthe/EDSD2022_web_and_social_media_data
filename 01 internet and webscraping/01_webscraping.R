@@ -258,7 +258,7 @@ geom_point(alpha = 0.1, aes(color = sentiment))
 
 
 ##########
-# Assignment 1:
+# Assignment 1 (This will be a part of the final assignment):
 # Create a creative/interesting plot of this dataset.
 # Think about the different dimensions and contents of how you can look at this.
 # Sentiment over time? Sentiment over newspaper? Count of some words over time?
