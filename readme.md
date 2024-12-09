@@ -13,6 +13,7 @@ It would be good if you create an account with Facebook and OpenAI before the co
 
 x7 Twitter - This part will be skipped, since twitter faded into X and X has no useful API anymore.
 I left the content here in case anyone is interested in it.
+Now that Bluesky is gaining traction, I added a script to download Bluesky data from their API.
 
 ## File access
 
