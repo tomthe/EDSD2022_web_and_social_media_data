@@ -1,6 +1,20 @@
 
+
+
+
+
+# Visit the API documentation and use curlconverter to get R-code from it.
+
+
+
+
+
 # https://curlconverter.com/r/
 # paste text from curl-converter here
+
+
+
+
 
 
 res$url

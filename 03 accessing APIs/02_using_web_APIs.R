@@ -61,7 +61,7 @@ install.packages("jsonlite") # this package can parse json-strings so that
 
 library(httr) # httr will do the requests for us (instead of rvest)
 library(jsonlite)
-library(lubridate)
+# library(lubridate)
 
 
 # Retrieve the URL and the parameters from the documentation of the API!
