@@ -64,6 +64,25 @@ headline
 # https://rvest.tidyverse.org/reference/index.html
 
 
+##################################
+# 2.1 Get https://www.demogr.mpg.de/en
+
+# the function html_elements returns a list of html nodes. If your selector
+# finds more than one element, you will get a list with several elements.
+
+mpidr_html <- read_html("https://www.demogr.mpg.de/en")
+mpidr_html
+
+# let us select all headlines with this selector and extract the text:
+selector <- "h1 a"
+headlines <- mpidr_html %>% html_elements("h1 a") %>% html_text2()
+
+# See how we got a list of all the headlines:
+headlines
+
+
+# Congratulations! If this all worked, you just scraped your first real website!
+
 
 ######################################
 # 3 - Scrape headlines from The Washington Post
@@ -116,13 +135,13 @@ dfheadlines2 <- dfheadlines %>%
 
 View(dfheadlines2)
 
-
-
 ##########################################
 # Exercise 1 - Scrape a news website!
 ##########################################
 
 # 1.1 Scrape the headlines of a news website of your choice! (not WP!)
+#       Some websites implement anti-scraping methods and are very hard to scrape.
+#       If you can't make it work for a specific website, please try another one.
 # 1.2 create a dataframe of these headlines
 # 1.3 save the dataframe to a csv-file 
 
