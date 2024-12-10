@@ -4,6 +4,10 @@ library(dplyr)
 # Prepare this lessen by loading a dataframe of scraped news headlines
 
 dfsmall  <- read.csv("./data/df_headlines_sentiment_small.csv")
+# (maybe you need adjust the filename fn)
+# you can copy and paste the whole filename with directory, like this:
+# D:\\nextcloud\\2024-EDSD-Course-Materials-Web-and-social-media-data\\01 internet and webscraping\data/df_headlines_sentiments_1.csv
+# if R cant find the file
 
 View(dfsmall)
 
