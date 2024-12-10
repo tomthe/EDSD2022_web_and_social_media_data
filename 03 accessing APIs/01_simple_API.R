@@ -1,9 +1,5 @@
-
-
-
-
-# https://brightsky.dev/
-# Visit the API documentation and use curlconverter to get R-code from it.
+# https://open-meteo.com/
+# Visit the API documentation and use https://curlconverter.com/ to get R-code from it.
 
 
 
