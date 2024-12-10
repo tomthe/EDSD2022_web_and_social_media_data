@@ -1,0 +1,33 @@
+#############
+# Prompt engineering
+
+# open https://chat.openai.com/
+# log in
+# Craft a prompt that returns a response which is easily machine readable
+
+
+# 
+Please assess the following newspaper headlines and respond in the given machine readable format. Reply with nothing else.
+I want to extract the following things:
+* topic-category (e.g. politics, sports, events, etc.)
+* topic-subcategory (e.g. international, football, car-crash, etc.)
+* Number of involved people (80 Million, 22, 3, etc.)
+* Name of main human (e.g. Joe Biden, David Beckham, unknown, etc.)
+* Is this a positive or negative event? (e.g. positive, negative, neutral, etc.)
+* Is this a local or global event? (e.g. local, global, unknown, etc.)
+* Is this somehow related to the pandemic? (10 means definitely, 0 means definitely not, -1 means unknown)
+* Is this somehow related to the climate crisis? (10 means definitely, 0 means definitely not, -1 means unknown)
+* Is this somehow related to the topic motherhood/fertility? (10 means definitely, 0 means definitely not, -1 means unknown)
+Example: 
+"""
+Axl Rose accused of violent sexual assault by former model in 1989: lawsuit
+"""
+Example-Answer:
+"entertainment|celebrity news|2|Axl Rose|negative|local|0|0|3"
+One line per headline:
+"""
+Tony Bennett's daughter prepares for first Thanksgiving since his death: 'Never look back'
+Ask Amy: A 50-something mom wants another kid; her husband does not.
+OpenAI and X: Promises of populist technology, shaped by a single man
+Gaza airstrikes persist as hostage and prisoner release delayed to Friday
+"""
