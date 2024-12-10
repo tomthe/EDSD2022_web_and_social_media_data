@@ -1,0 +1,14 @@
+The file filtered_facebook.csv contains audience estimates from the Facebook marketing API.
+
+It was obtained in May 2024.
+
+It is disaggregated by several age groups, gender, current country and source country.
+
+dau - daily active users
+behaviors - Expat from country X
+mau - monthly active uerers
+mau_lower - lower estimate (by Facebook)
+mau_upper - 
+country - current or home location of the Facebook users
+age_group - age from-to
+gender_alias - gender: M, F or all

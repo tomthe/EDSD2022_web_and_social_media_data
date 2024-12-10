@@ -215,18 +215,17 @@ If it worked, you can download the data as json, which can be easily imported in
 
 ### Twitter
 
-In case you can not use the academic access API of Twitter, you might want to 
-work with a Twitter-dump.
+If you want to work with Twitter data and can not afford to pay 100k$ for API-access,
+you might want to work with a Twitter-dump.
 
-Twitter earns 10% of its revenue by selling data. But it offers a 1% sample for free.
+Twitter earns 10% of its revenue by selling data. But it offered a 1% sample for free.
 This sample contains all tweets that are sent in the first 10 microseconds of every
 second. This is still a huge number of tweets. Volunteers have gathered this sample
 and offer it for free:
 
-https://files.pushshift.io/twitter/
+https://archive.org/details/twitterstream
 
-https://files.pushshift.io/twitter/verified_feed/ - "This directory contains daily dumps of all publicly available verified tweets and retweets. Present daily volume from all verified accounts (~335k verified accounts) is around 2.5 million tweets per day. This should be ~100% of all verified tweets made for the day mentioned in the filename."
-
+Unfortunately, this is not updated anymore since mid-2021.
 
 
 ### Government data sources and sources from supranational organisations
