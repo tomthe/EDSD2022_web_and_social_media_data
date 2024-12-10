@@ -4,7 +4,6 @@ library(dplyr)
 # Prepare this lessen by loading a dataframe of scraped news headlines
 
 dfsmall  <- read.csv("./data/df_headlines_sentiment_small.csv")
-dfbig    <- read.csv("../data/df_headlines_sentiment_7months.csv")
 
 View(dfsmall)
 
@@ -99,8 +98,11 @@ View(df_joy)
 # You can find it in the data subfolder.
 # This dataset offers more ways to filter and plot news data.
 
-fn ="data/df_headlines_sentiments_1.csv"
+fn ="./data/df_headlines_sentiments_1.csv"
 # (maybe you need adjust the filename fn)
+# you can copy and paste the whole filename with directory, like this:
+# D:\\nextcloud\\2024-EDSD-Course-Materials-Web-and-social-media-data\\01 internet and webscraping\data/df_headlines_sentiments_1.csv
+# if R cant find the file
 df_headlines_sentiments = read.csv(fn)
 
 View(df_headlines_sentiments)
