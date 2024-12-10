@@ -10,7 +10,7 @@
 # hierarchical data and easy programmatical access of the data.
 # The jsonlite package can parse json-strings so that 
 # it is easier to access the data inside:
-install.packages("jsonlite")
+# install.packages("jsonlite")
 
 library(jsonlite)
 
@@ -35,10 +35,9 @@ json_parsed <- jsonlite::fromJSON(json_string)
 json_parsed$menu$value
 
 # **Exercise: **Try to acces the string "file":
-json_parsed$ ...?
+#json_parsed$ ...?
 
-# get the value of the first menuitem:
-json_parsed$menu$popup$menuitem$value[1]
+# get the "value" of the first menuitem:
 
 
 
@@ -54,9 +53,7 @@ json_parsed$menu$popup$menuitem$value[1]
 
 
 # Install and load the necessary packages to do HTTP-request and read json:
-install.packages("httr") # this package can request URLs over the internet
-install.packages("jsonlite") # this package can parse json-strings so that 
-# it is easier to access the data inside
+# install.packages("httr") # this package can request URLs over the internet
 
 
 library(httr) # httr will do the requests for us (instead of rvest)
@@ -111,7 +108,7 @@ rescontent$hourly$time[[1]]
 # http://open-notify.org/Open-Notify-API/ISS-Location-Now/
 # https://developer.spotify.com/documentation/web-api/
 # https://spoonacular.com/food-api
-# geocoding and reverse geocoding apis
+# geocoding and reverse geocoding apis - search for yourself!
 #############################
 
 

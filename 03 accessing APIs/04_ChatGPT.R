@@ -44,9 +44,9 @@ http_headers <- add_headers(
 
 # Request Body
 request_body <- list(
-  model = "gpt-3.5-turbo",
+  model = "gpt-4o-mini",
   messages = list(
-    list(role = "system", content = "You are a helpful assistant."),
+    list(role = "system", content = "You are a funny and concise assistant."),
     list(role = "user", content = "What is the fanciest demographic research institute in France?")
   )
 )
@@ -55,11 +55,13 @@ request_body <- list(
 request_body_json <- jsonlite::toJSON(request_body, auto_unbox = T)
 
 # Send POST Request
-response <- POST(
+response <- httr::POST(
   url = "https://api.openai.com/v1/chat/completions",
   body = request_body_json,
   http_headers
 )
+
+response
 
 # Print Response
 print(content(response))
@@ -94,7 +96,8 @@ print(completion)
 # **Exercise/Assignment 3.4.2:**
 # Retrieve a joke in another language than spanish and then
 # translate it to spanish (or a language of your choice).
-# All with web-APIs.
+# (or do it the other way around).
+# All with web-APIs. 
 #############################
 
 
