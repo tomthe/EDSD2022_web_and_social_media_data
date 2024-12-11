@@ -33,7 +33,7 @@ View(dat)
 # Plot it:
 library(ggplot2)
 g <- ggplot(dat, aes(year, SP.URB.TOTL.IN.ZS, color=country)) + geom_line(aes(frame=country)) + 
-  xlab('Year') + ylab('Urban population growth (annual %)')
+  xlab('Year') + ylab('Rural population (% of total population)')
 
 g
 
