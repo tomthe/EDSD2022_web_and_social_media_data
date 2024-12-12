@@ -45,7 +45,7 @@ VERSION      <- "v20.0"
 #  GDP per capita (NY.GDP.PCAP.CD)
 #  Individuals using the Internet, % of population (IT.NET.USER.ZS)
 
-wdi_df <- WDI(country = c('AR','FR','IN',),  # 'ES','DE','PL','MX','PH','NG','ZA','BR','AR','TR','EG'
+wdi_df <- WDI(country = c('AR','FR','IN'),  # 'ES','DE','PL','MX','PH','NG','ZA','BR','AR','TR','EG'
               indicator = c("SP.POP.TOTL",
                             "SP.POP.TOTL.MA.ZS",
                             "SP.POP.TOTL.FE.ZS",
@@ -74,7 +74,7 @@ View(fb_df)
 # write.csv(fb_df,file="fb_audiences_1.csv")
 
 ## read the dataframe, in case FB didn't work for you:
-# fb_df = read.csv(file.choose()) # fb_audiences_1.csv
+fb_df = read.csv(file.choose()) # fb_audiences_1.csv
 
 
 # Look into the documentation of the package and directly at facebook
