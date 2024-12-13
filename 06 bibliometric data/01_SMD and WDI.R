@@ -108,6 +108,10 @@ g
 
 
 
-# Exercise
+# Exercise 1
+
+# Use data from SMD and WDI (please use different measures than in the examples)
+# merge them and create a plot!
+
 
 
